@@ -1,0 +1,85 @@
+package com.kevosoftworks.rpifpgaiface;
+
+import java.io.IOException;
+
+import com.pi4j.io.spi.SpiChannel;
+import com.pi4j.io.spi.SpiDevice;
+import com.pi4j.io.spi.SpiFactory;
+import com.pi4j.util.Console;
+
+public class SPIInterface {
+	
+	public SpiDevice spi;
+	protected final Console console = new Console();
+	
+	public SPIInterface(){
+		console.title("test");
+		console.promptForExit();
+		if(!this.initialise()){
+			System.out.println("Cannot init SPI interface!");
+		}
+	}
+	
+	public boolean initialise(){
+		try {
+			spi = SpiFactory.getInstance(SpiChannel.CS0,
+			        SpiDevice.DEFAULT_SPI_SPEED, // default spi speed 1 MHz
+			        SpiDevice.DEFAULT_SPI_MODE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} // default spi mode 0
+
+        // continue running program until user exits using CTRL-C
+        while(console.isRunning()) {
+            try {
+				read();
+			} catch (IOException | InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+        console.emptyLine();
+		return true;
+	}
+	
+	public void read() throws IOException, InterruptedException {
+        for(short channel = 0; channel < 4; channel++){
+            //int conversion_value = getConversionValue(channel);
+            console.print(String.format(" | %04d", 0xff)); // print 4 digits with leading zeros
+        }
+        console.print(" |\r");
+        Thread.sleep(250);
+    }
+	
+	public boolean sendData(byte[] data){
+		boolean res = true;
+		for(byte b:data){
+			res = this.sendByte(b);
+			if(!res){
+				System.out.println("Error in sending data");
+				return res;
+			}
+		}
+		return res;
+	}
+	
+	public boolean sendByte(byte b){
+		try {
+			spi.write(b);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+}

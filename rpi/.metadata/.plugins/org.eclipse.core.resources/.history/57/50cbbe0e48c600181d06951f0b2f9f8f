@@ -1,0 +1,38 @@
+package com.kevosoftworks.rpifpgaiface;
+
+public class Main implements Runnable{
+	
+	boolean running = false;
+	Thread thread;
+	
+	public Main(){
+		System.out.println("Lala");
+	}
+
+	@Override
+	public void run() {
+		System.out.println("Lala");		
+	}
+	
+	public static void main(String[] args){
+		new Main().start();
+	}
+	
+	public synchronized void start(){
+		if(running) return;
+		running = true;
+		thread = new Thread(this);
+		thread.start();
+	}
+	
+	public synchronized void stop(){
+		if(!running) return;
+		running = false;
+		try{
+			thread.join();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+}
