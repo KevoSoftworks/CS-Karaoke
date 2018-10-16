@@ -2,6 +2,11 @@ package com.kevosoftworks.rpifpgaiface;
 
 import java.io.IOException;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.spi.SpiChannel;
 import com.pi4j.io.spi.SpiDevice;
 import com.pi4j.io.spi.SpiFactory;
@@ -11,8 +16,12 @@ public class SPIInterface {
 	
 	public SpiDevice spi;
 	protected final Console console = new Console();
+	GpioController gpio;
+	GpioPinDigitalOutput pin;
 	
 	public SPIInterface(){
+		gpio = GpioFactory.getInstance();
+		pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.HIGH);
 		console.title("Test connection");
 		console.promptForExit();
 		if(!this.initialise()){
@@ -34,9 +43,10 @@ public class SPIInterface {
 	}
 	
 	public void read() throws IOException, InterruptedException {
-        console.print(0x0f);
-        this.sendByte(0x0f);
-        Thread.sleep(250);
+        console.print(0xff);
+        this.sendByte(0xff);
+        pin.toggle();
+        Thread.sleep(500);
     }
 	
 	public boolean sendData(byte[] data){
