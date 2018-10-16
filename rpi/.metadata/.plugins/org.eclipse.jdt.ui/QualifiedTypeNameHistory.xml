@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="com.pi4j.util.Console"/>
+<fullyQualifiedTypeName name="com.pi4j.io.spi.SpiFactory"/>
+<fullyQualifiedTypeName name="com.pi4j.io.spi.SpiChannel"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioPinDigitalOutput"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.RaspiPin"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.PinState"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioController"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioFactory"/>
+</qualifiedTypeNameHistroy>

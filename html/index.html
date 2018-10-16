@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>Karaoke</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
+		<script src="script.js"></script>
+	</head>
+	
+	<body>
+		<div class="header">
+			<div class="header-img"></div>
+			<div class="header-text">
+				<h1>Karaoke</h1>
+				<h2>A Computer Science singing game</h2>
+			</div>
+		</div>
+		
+		<div class="wrapper">
+			<div class="section" id="main">
+				<h3>Main menu</h3>
+				<p class="subtitle">&nbsp;</p>
+				
+				<div class="subsection">
+					<div class="text content">
+						<button onClick="ui.start()">Start Game</button><br/>
+						<button onClick="ui.settings()">Settings</button><br/>
+					</div>
+				</div>
+			</div>
+
+			<div class="section slideup" id="settings">
+				<h3>Settings</h3>
+				<p class="subtitle">&nbsp;</p>
+				<div class="subsection">
+					<div class="text content">
+						Gamemode: <select><option>Sing-along</option><option>Score me!</option></select><br/>
+						Sampling rate: <select><option>20kHz</option><option>40kHz</option></select><br/>
+						Bit width: <select><option>8bit</option><option>16bit</option></select></br>
+						<br/>
+						<button onClick="ui.main()">Back to main menu</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="section slideup" id="game">
+				<h3>Game</h3>
+				<p id="status" class="subtitle">Connecting to the Java server...</p>
+
+				<div class="subsection">
+					<div id="gameWindow" class="text content">
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

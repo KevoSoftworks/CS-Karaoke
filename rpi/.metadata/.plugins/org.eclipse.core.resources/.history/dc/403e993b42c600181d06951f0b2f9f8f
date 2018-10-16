@@ -1,9 +1,0 @@
-package com.kevosoftworks.rpifpgaiface;
-
-public class Main {
-	
-	public Main(){
-		System.out.println("Lala");
-	}
-
-}
