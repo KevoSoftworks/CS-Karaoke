@@ -1,6 +1,8 @@
 package com.kevosoftworks.rpifpgaiface;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
@@ -28,6 +30,7 @@ public class CaptureAudio {
 		boolean bigEndian = true;
 		AudioFormat format =  new AudioFormat(sampleRate, 
 		  sampleSizeInBits, channels, signed, bigEndian);
+		int test = 0;
 
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 		try {
@@ -45,7 +48,13 @@ public class CaptureAudio {
 				int count = line.read(buffer, 0, buffer.length);
 				if (count > 0) {
 					long time = System.currentTimeMillis() - startTime;
-					new Packet(buffer, true, false, time);
+					//new Packet(buffer, true, false, time);
+					System.out.println("new packet with: " + buffer.toString());
+					System.out.println("time: " + time);
+					test++;
+					if(test == 20) {
+					   stopCapture();
+					}
 					//out.write(buffer, 0, count);
 				}
 			}
@@ -57,8 +66,9 @@ public class CaptureAudio {
 		}
 	}
 	
-	public void stopCapture() {
+	public static void stopCapture() {
 		songIsPlaying = false;
+		System.out.println("stopped");
 	}
 	
 	
