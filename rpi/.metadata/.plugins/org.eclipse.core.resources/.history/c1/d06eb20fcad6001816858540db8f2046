@@ -32,7 +32,7 @@ public class SPIInterface {
 			System.out.println("Cannot init SPI interface!");
 		}
 		this.blen = blen;
-		lala = new byte[this.blen - 2];
+		lala = new byte[this.blen];
 		r = new Random();
 		this.loops = l;
 	}
@@ -47,13 +47,10 @@ public class SPIInterface {
 	}
 	
 	public void read() throws IOException, InterruptedException {
+		//byte send = (byte) (i%255);
 		r.nextBytes(lala);
-        try {
-			byte[] receive = this.readByte(new Packet(lala, false, false, 0).getPacket());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        //this.sendByte(send);
+        byte[] receive = this.readByte(lala);
         /*if(i%100 == 0){
         	for(int j = 0; j < lala.length; j++){
         		System.out.println("Sent: " + byteToString(lala[j]) + " (" + lala[j] + "); Received: " + byteToString(receive[j]) + " (" + receive[j] + ");");

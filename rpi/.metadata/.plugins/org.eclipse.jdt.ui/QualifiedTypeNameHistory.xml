@@ -8,4 +8,5 @@
 <fullyQualifiedTypeName name="com.pi4j.io.gpio.PinState"/>
 <fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioController"/>
 <fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioFactory"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
 </qualifiedTypeNameHistroy>

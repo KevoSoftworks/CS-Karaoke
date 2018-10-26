@@ -18,27 +18,24 @@ public class SPIInterface {
 	
 	public SpiDevice spi;
 	GpioController gpio;
-
+	GpioPinDigitalOutput pin;
 	int i = 0;
-	int loops = 0;
 	
 	byte[] lala;
 	Random r;
-	int blen;
 	
-	public SPIInterface(int l, int blen){
+	public SPIInterface(){
 		gpio = GpioFactory.getInstance();
+		pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.HIGH);
 		if(!this.initialise()){
 			System.out.println("Cannot init SPI interface!");
 		}
-		this.blen = blen;
-		lala = new byte[this.blen - 2];
+		lala = new byte[1024];
 		r = new Random();
-		this.loops = l;
 	}
 	
 	public boolean initialise(){
-		int fd = Spi.wiringPiSPISetup(0, 16000000);
+		int fd = Spi.wiringPiSPISetup(0, 32000000);
         if (fd <= -1) {
             System.out.println(" ==>> SPI SETUP FAILED");
             return false;
@@ -47,20 +44,13 @@ public class SPIInterface {
 	}
 	
 	public void read() throws IOException, InterruptedException {
+		//byte send = (byte) (i%255);
 		r.nextBytes(lala);
-        try {
-			byte[] receive = this.readByte(new Packet(lala, false, false, 0).getPacket());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        /*if(i%100 == 0){
-        	for(int j = 0; j < lala.length; j++){
-        		System.out.println("Sent: " + byteToString(lala[j]) + " (" + lala[j] + "); Received: " + byteToString(receive[j]) + " (" + receive[j] + ");");
-        	}
-        }*/
+        //this.sendByte(send);
+        byte[] receive = this.readByte(lala);
+        if(i%250 == 0)System.out.println("Sent: " + byteToString(lala[0]) + " (" + lala[0] + "); Received: " + byteToString(receive[0]) + " (" + receive[0] + ");");
         i++;
-        if(i == loops) Main.running = false;
+        if(i == 2000) Main.running = false;
     }
 	
 	public boolean sendData(byte[] data){
@@ -87,10 +77,8 @@ public class SPIInterface {
 	}
 	
 	public byte[] readByte(byte[] b){
-		byte[] ret = b.clone();
-		if(loops == 1) System.out.println(ret.length);
-		Spi.wiringPiSPIDataRW(0, ret);
-		return ret;
+		Spi.wiringPiSPIDataRW(0, b.clone(), 1);
+		return b;
 	}
 	
 	public String byteToString(byte b){

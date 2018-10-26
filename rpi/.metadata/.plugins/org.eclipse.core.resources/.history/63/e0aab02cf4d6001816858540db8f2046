@@ -8,13 +8,12 @@ public class Packet {
 	 * xy....zz zzzzzzzz	x: boolean isRec
 	 * 						y: boolean sendScore
 	 * 						z: total packet length (max 2^10)
-	 * 						.: unused
 	 * 
 	 */
 	
 	byte[] packet;
 	
-	public Packet(byte[] data, boolean isRec, boolean sendScore, long time) throws Exception{
+	public Packet(byte[] data, boolean isRec, boolean sendScore) throws Exception{
 		byte[] p = new byte[2];
 		if(data.length + 2 > 1024) throw new Exception("Packet length too long (max 1024)");
 		
