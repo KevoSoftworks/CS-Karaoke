@@ -1,0 +1,29 @@
+package com.kevosoftworks.rpifpgaiface;
+
+public class Packet {
+	
+	/*
+	 * Header layout:
+	 * 
+	 * xyyyyyzz zzzzzzzz	x: boolean isRec
+	 * 						y: Not used
+	 * 						z: total packet length (max 2^10)
+	 * 
+	 */
+	
+	byte[] packet;
+	
+	public Packet(byte[] data, int sampleRate, boolean isRec) throws Exception{
+		this.packet = new byte[data.length + 2];
+		if(this.packet.length > 1024) throw new Exception("Packet length too long (max 1024)");
+		
+		this.packet[0] = (byte)(this.packet.length >> 8);
+		this.packet[1] = (byte)(this.packet.length);
+		if(isRec) this.packet[0] |= 0b10000000;
+	}
+	
+	public byte[] getPacket(){
+		return this.packet;
+	}
+
+}
