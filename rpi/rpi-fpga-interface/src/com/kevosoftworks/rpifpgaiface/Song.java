@@ -1,0 +1,52 @@
+package com.kevosoftworks.rpifpgaiface;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+
+public class Song {
+	
+	String name;
+	SPIInterface spi;
+	
+	HashMap<Long, byte[]> original;
+	HashMap<Long, Integer> originZeroCross;
+	HashMap<Long, byte[]> record;
+	HashMap<Long, Integer> recordZeroCross;
+	
+	public Song(String name){
+		this.name = name;
+		this.original = new HashMap<Long, byte[]>();
+		this.originZeroCross = new HashMap<Long, Integer>();
+		this.record = new HashMap<Long, byte[]>();
+		this.recordZeroCross = new HashMap<Long, Integer>();
+		
+		
+	}
+	
+	public void convertOriginal(){
+		
+	}
+	
+	public void sendOriginal() throws Exception{
+		for(Entry<Long, byte[]> e: record.entrySet()){
+			Packet p = new Packet(e.getValue(), false, false, e.getKey());
+			spi.readByte(p.getPacket());
+			p = new Packet(new byte[]{0, 0, 0, 0}, false, true, 0);
+			byte[] result = spi.readByte(p.getPacket());
+			
+			int cross = this.byteArrToZeroCross(result);
+			this.originZeroCross.put(e.getKey(), cross);
+		}
+	}
+	
+	public int byteArrToZeroCross(byte[] in){
+		int ret = 0;
+		int i = 0;
+		for(byte b:in){
+			if((int)b == 0 && ret == 0) continue;
+			ret = (int)(b << 8*i);
+		}
+		return ret;
+	}
+
+}

@@ -1,6 +1,7 @@
 package com.kevosoftworks.rpifpgaiface;
 
 import java.io.IOException;
+import java.util.Random;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -11,42 +12,55 @@ import com.pi4j.io.spi.SpiChannel;
 import com.pi4j.io.spi.SpiDevice;
 import com.pi4j.io.spi.SpiFactory;
 import com.pi4j.util.Console;
+import com.pi4j.wiringpi.Spi;
 
 public class SPIInterface {
 	
 	public SpiDevice spi;
-	protected final Console console = new Console();
 	GpioController gpio;
-	GpioPinDigitalOutput pin;
+
+	int i = 0;
+	int loops = 0;
 	
-	public SPIInterface(){
+	byte[] lala;
+	Random r;
+	int blen;
+	
+	public SPIInterface(int l, int blen){
 		gpio = GpioFactory.getInstance();
-		pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.HIGH);
-		console.title("Test connection");
-		console.promptForExit();
 		if(!this.initialise()){
 			System.out.println("Cannot init SPI interface!");
 		}
+		this.blen = blen;
+		lala = new byte[this.blen - 2];
+		r = new Random();
+		this.loops = l;
 	}
 	
 	public boolean initialise(){
-		try {
-			spi = SpiFactory.getInstance(SpiChannel.CS0,
-			        SpiDevice.DEFAULT_SPI_SPEED,
-			        SpiDevice.DEFAULT_SPI_MODE);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		int fd = Spi.wiringPiSPISetup(0, 16000000);
+        if (fd <= -1) {
+            System.out.println(" ==>> SPI SETUP FAILED");
+            return false;
+        }
+        return true;
 	}
 	
 	public void read() throws IOException, InterruptedException {
-        console.print(0xff);
-        this.sendByte(0xff);
-        pin.toggle();
-        Thread.sleep(500);
+		r.nextBytes(lala);
+        try {
+			byte[] receive = this.readByte(new Packet(lala, false, false, 0).getPacket());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        /*if(i%100 == 0){
+        	for(int j = 0; j < lala.length; j++){
+        		System.out.println("Sent: " + byteToString(lala[j]) + " (" + lala[j] + "); Received: " + byteToString(receive[j]) + " (" + receive[j] + ");");
+        	}
+        }*/
+        i++;
+        if(i == loops) Main.running = false;
     }
 	
 	public boolean sendData(byte[] data){
@@ -70,6 +84,17 @@ public class SPIInterface {
 			return false;
 		}
 		return true;
+	}
+	
+	public byte[] readByte(byte[] b){
+		byte[] ret = b.clone();
+		if(loops == 1) System.out.println(ret.length);
+		Spi.wiringPiSPIDataRW(0, ret);
+		return ret;
+	}
+	
+	public String byteToString(byte b){
+		return String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
 	}
 
 }
