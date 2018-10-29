@@ -1,6 +1,8 @@
 package com.kevosoftworks.rpifpgaiface;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -26,12 +28,39 @@ public class GetAudio {
 		byte[] targetData = new byte[microphone.getBufferSize() / 5];
 		PlayAudio player = new PlayAudio();
 		
+		FileOutputStream stream = null;
+		
+		/*
+		try {
+			stream = new FileOutputStream("/test.wav");	
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		*/
+		
 		while (true) {
 			numBytesRead = microphone.read(targetData, 0, targetData.length);
 			if (numBytesRead == -1)	break;
 			
+			/*
+			try {
+				stream.write(targetData);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+			
+			try {
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			*/
 			
 			player.playSound(targetData, numBytesRead);
 		}
+	}
+	
+	public static void main(String[] args) {
+		new GetAudio().start();
 	}
 }
