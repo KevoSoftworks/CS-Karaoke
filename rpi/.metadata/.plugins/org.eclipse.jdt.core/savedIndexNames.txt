@@ -2,7 +2,6 @@ INDEX VERSION 1.126+/home/kevo/Documents/CS-Karaoke/rpi/.metadata/.plugins/org.e
 2502524032.index
 1821019304.index
 920286371.index
-3973043121.index
 949806723.index
 3515729613.index
 3478317492.index

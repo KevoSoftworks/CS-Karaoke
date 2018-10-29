@@ -45,12 +45,7 @@ public class CaptureAudio {
 				int count = line.read(buffer, 0, buffer.length);
 				if (count > 0) {
 					long time = System.currentTimeMillis() - startTime;
-					try {
-						new Packet(buffer, true, false, time);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					new Packet(buffer, true, false, time);
 					//out.write(buffer, 0, count);
 				}
 			}
