@@ -6,15 +6,30 @@ import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
 public class GetAudio {
 	TargetDataLine microphone;
-	SPIInterface spi = new SPIInterface();
+	// SPIInterface spi = new SPIInterface();
 	public GetAudio() {
+		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();
+		
+		// change the index in the mixinfos[] until it has the correct driver.
+		Mixer mixer = AudioSystem.getMixer(mixInfos[3]);
 		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
 		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
+		
+		try {
+			microphone = (TargetDataLine) mixer.getLine(targetInfo);
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
 		try {
 			microphone = (TargetDataLine) AudioSystem.getLine(targetInfo);
 			microphone.open(format);
@@ -22,6 +37,9 @@ public class GetAudio {
 		} catch (Exception e) {
 			System.err.println(e);
 		}
+		
+//		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
+//		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
 	}
 	
 	public void start() {
@@ -36,7 +54,7 @@ public class GetAudio {
 			long time = System.currentTimeMillis() - startTime;
 			try {
 				Packet pack = new Packet(targetData, true, false, time);
-				spi.readByte(pack.getPacket());
+				// spi.readByte(pack.getPacket());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
