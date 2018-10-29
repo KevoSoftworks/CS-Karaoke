@@ -13,28 +13,30 @@ public class TestSound1 {
 		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
 
 		try {
-			TargetDataLine targetLine = (TargetDataLine) AudioSystem.getLine(targetInfo);
-			targetLine.open(format);
-			targetLine.start();
+			TargetDataLine microphone = (TargetDataLine) AudioSystem.getLine(targetInfo);
+			microphone.open(format);
+			microphone.start();
 			
-			SourceDataLine sourceLine = (SourceDataLine) AudioSystem.getLine(sourceInfo);
-			sourceLine.open(format);
-			sourceLine.start();
-
+			SourceDataLine speakers = (SourceDataLine) AudioSystem.getLine(sourceInfo);
+			speakers.open(format);
+			speakers.start();
+			
 			int numBytesRead;
-			byte[] targetData = new byte[targetLine.getBufferSize() / 5];
+			byte[] targetData = new byte[microphone.getBufferSize() / 5];
+			PlayAudio player = new PlayAudio();
 
 			while (true) {
-				numBytesRead = targetLine.read(targetData, 0, targetData.length);
+				numBytesRead = microphone.read(targetData, 0, targetData.length);
 				
 				for (byte b: targetData) {
-					System.out.printf("0x%02X", b);
+					// System.out.printf("0x%02X", b);
 				}
 				// System.out.println(numBytesRead);
 				if (numBytesRead == -1)	break;
 
-				sourceLine.write(targetData, 0, numBytesRead);
-				// System.out.println(sourceLine);
+				speakers.write(targetData, 0, numBytesRead);
+				// player.playSound(targetData, numBytesRead);
+				// System.out.println(speakers);
 				
 			}
 		}
