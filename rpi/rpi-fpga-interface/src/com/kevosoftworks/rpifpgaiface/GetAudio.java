@@ -40,6 +40,7 @@ public class GetAudio {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 			if (numBytesRead == -1)	break;
 			
 			player.playSound(targetData, numBytesRead);
