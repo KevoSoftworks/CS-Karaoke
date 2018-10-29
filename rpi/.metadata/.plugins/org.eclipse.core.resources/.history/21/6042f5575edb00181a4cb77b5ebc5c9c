@@ -5,8 +5,6 @@ import java.util.Map.Entry;
 
 public class Song {
 	
-	public static final String DEFAULT = "lala.wav";
-	
 	String name;
 	SPIInterface spi;
 	
@@ -15,12 +13,7 @@ public class Song {
 	HashMap<Long, byte[]> record;
 	HashMap<Long, Integer> recordZeroCross;
 	
-	public Song(SPIInterface spi){
-		this(spi, DEFAULT);
-	}
-	
-	public Song(SPIInterface spi, String name){
-		this.spi = spi;
+	public Song(String name){
 		this.name = name;
 		this.original = new HashMap<Long, byte[]>();
 		this.originZeroCross = new HashMap<Long, Integer>();

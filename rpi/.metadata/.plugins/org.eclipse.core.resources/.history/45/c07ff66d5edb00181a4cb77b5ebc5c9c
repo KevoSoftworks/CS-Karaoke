@@ -15,11 +15,11 @@ public class Song {
 	HashMap<Long, byte[]> record;
 	HashMap<Long, Integer> recordZeroCross;
 	
-	public Song(SPIInterface spi){
+	public Song(spi){
 		this(spi, DEFAULT);
 	}
 	
-	public Song(SPIInterface spi, String name){
+	public Song(spi, String name){
 		this.spi = spi;
 		this.name = name;
 		this.original = new HashMap<Long, byte[]>();
