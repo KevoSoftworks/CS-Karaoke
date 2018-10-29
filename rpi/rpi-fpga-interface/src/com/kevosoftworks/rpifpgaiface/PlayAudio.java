@@ -9,7 +9,7 @@ public class PlayAudio {
 	SourceDataLine speakers;
 	
 	public PlayAudio() {
-		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
+		AudioFormat format = new AudioFormat(8000, 8, 1, true, true);
 		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
 		try {
 			speakers = (SourceDataLine) AudioSystem.getLine(sourceInfo);

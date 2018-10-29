@@ -23,7 +23,7 @@ public class TestSound {
 		}
 		
 		// 0 is default output (maybe input as well).
-		mixer = AudioSystem.getMixer(mixInfos[0]);
+		mixer = AudioSystem.getMixer(mixInfos[2]);
 		
 		DataLine.Info dataInfo = new DataLine.Info(Clip.class, null);
 		try {

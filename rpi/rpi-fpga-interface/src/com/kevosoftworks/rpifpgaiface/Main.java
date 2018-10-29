@@ -1,13 +1,12 @@
 package com.kevosoftworks.rpifpgaiface;
 
-import java.io.IOException;
-
 public class Main implements Runnable{
 	
 	static boolean running = false;
 	Thread thread;	
 	SPIInterface si;
 	Song s;
+	GetAudio a;
 	
 	public Main(String file){
 		si = new SPIInterface();
@@ -17,10 +16,12 @@ public class Main implements Runnable{
 	public Main(){
 		si = new SPIInterface();
 		s = new Song(si);
+		a = new GetAudio();
 	}
 
 	@Override
 	public void run() {
+		a.start();
 		s.convertOriginal();
 		try {
 			s.sendOriginal();
