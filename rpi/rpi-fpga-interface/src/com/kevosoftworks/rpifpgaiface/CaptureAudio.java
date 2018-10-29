@@ -43,7 +43,7 @@ public class CaptureAudio {
 			System.out.println("frame size: " + format.getFrameSize());
 			
 			byte buffer[] = new byte[bufferSize/8];
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			//ByteArrayOutputStream out = new ByteArrayOutputStream();
 			while (songIsPlaying) {
 				int count = line.read(buffer, 0, buffer.length);
 				if (count > 0) {
@@ -51,6 +51,7 @@ public class CaptureAudio {
 					//new Packet(buffer, true, false, time);
 					System.out.println("new packet with: " + buffer.toString());
 					System.out.println("time: " + time);
+					new TestCaptureAudio(buffer);
 					test++;
 					if(test == 20) {
 					   stopCapture();
@@ -58,10 +59,8 @@ public class CaptureAudio {
 					//out.write(buffer, 0, count);
 				}
 			}
-			out.close();
+			//out.close();
 		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
