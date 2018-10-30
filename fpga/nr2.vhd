@@ -52,13 +52,17 @@ PROCESS(reset, SCLK)
 	VARIABLE code : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
 	VARIABLE timeframe : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
 	VARIABLE nr_of_bytes : INTEGER range 4 to 1024;
+	CONSTANT marge : INTEGER := 256;
+	VARIABLE zerocrossings : INTEGER := 0;
+	VARIABLE amplitudesign : STD_LOGIC;
+	VARIABLE std_zero : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
+
 	BEGIN
 		IF reset = '0' THEN
 			i := 0;
 			c := 0;
 			MISO <= '0';
 			code := "0000000000000000";
-			timeframe := "0000000000000000";
 	 		display1 <= hex2display("0000");
 	 		display2 <= hex2display("0000");
 	 		display3 <= hex2display("0000");
@@ -68,14 +72,30 @@ PROCESS(reset, SCLK)
 		ELSIF SCLK'event AND SCLK = '1' THEN
 			code(15-i) := MOSI;
 			i := i + 1;
-			MISO <= MOSI;
 			IF i = 16 THEN i := 0; c := c + 2; END IF;
 			IF c >= nr_of_bytes THEN c := 0; END IF;
-			IF c = 2 AND i = 0 THEN 
-				nr_of_bytes := TO_INTEGER(UNSIGNED(code(9 DOWNTO 0))) + 1;
-			END IF;
-			IF c = 4 AND i = 0 THEN
-				timeframe := code;
+			IF c = 0 THEN MISO <= std_zero(15 - i);
+			ELSIF c = 2 THEN
+				MISO <= timeframe(15 - i);
+				IF i = 0 THEN
+					nr_of_bytes := TO_INTEGER(UNSIGNED(code(9 DOWNTO 0))) + 1;
+					zerocrossings := 0;
+				END IF;
+			ELSIF c = 4 AND i = 0 THEN timeframe := code; MISO <= '0';
+			ELSIF c = 6 AND i = 0 THEN 
+				IF TO_INTEGER(SIGNED(code)) < 0 THEN amplitudesign := '0'; 
+				ELSIF TO_INTEGER(SIGNED(code)) > 0 THEN amplitudesign := '1';
+				END IF;
+			ELSIF c > 6 AND i = 0 THEN
+				IF TO_INTEGER(SIGNED(code)) < -marge AND amplitudesign = '1' THEN
+					zerocrossings := zerocrossings + 1;
+					amplitudesign := '0';
+					std_zero := STD_LOGIC_VECTOR(TO_UNSIGNED(zerocrossings, 16));
+				ELSIF TO_INTEGER(SIGNED(code)) > marge AND amplitudesign = '0' THEN
+					zerocrossings := zerocrossings + 1;
+					amplitudesign := '1';
+					std_zero := STD_LOGIC_VECTOR(TO_UNSIGNED(zerocrossings, 16));
+				END IF;
 			END IF;
 			display1 <= hex2display(timeframe(3 DOWNTO 0));
 	 		display2 <= hex2display(timeframe(7 DOWNTO 4));
