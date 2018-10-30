@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Karaoke</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
 		<script src="script.js"></script>
@@ -22,8 +23,9 @@
 				
 				<div class="subsection">
 					<div class="text content">
-						<button onClick="ui.start()">Start Game</button><br/>
-						<button onClick="ui.settings()">Settings</button><br/>
+						<button type="button" class="btn btn-primary" onClick="ui.start()">Start Game</button><br/>
+						<br>
+						<button type="button" class="btn btn-primary" onClick="ui.settings()">Settings</button><br/>
 					</div>
 				</div>
 			</div>
@@ -37,7 +39,7 @@
 						Sampling rate: <select><option>20kHz</option><option>40kHz</option></select><br/>
 						Bit width: <select><option>8bit</option><option>16bit</option></select></br>
 						<br/>
-						<button onClick="ui.main()">Back to main menu</button>
+						<button type="button" class="btn btn-primary" onClick="ui.main()">Back to main menu</button>
 					</div>
 				</div>
 			</div>
