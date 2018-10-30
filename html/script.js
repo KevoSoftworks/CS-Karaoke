@@ -16,7 +16,14 @@ var ws = new WebSocket("ws://127.0.0.1:8080/");
         console.log("Error: " + err);
     };
     
-
+var lis = document.getElementsByTagName("li");
+console.log(lis);
+for (let i = 0; i < lis.length; i += 1) {
+	lis[i].addEventListener("click", function() {
+		console.log(lis[i]);
+		ws.send(lis[i].textContent)
+	});
+};
 
 let ui = {
 	"start": function(){
@@ -33,6 +40,11 @@ let ui = {
 	"settings": function(){
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("settings").classList.remove("slideup");
+	},
+
+	"songList": function() {
+		document.getElementById("main").classList.add("slideup");
+		document.getElementById("songList").classList.remove("slideup");
 	}
 }
 

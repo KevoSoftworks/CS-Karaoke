@@ -4,7 +4,6 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
-		<script src="script.js"></script>
 	</head>
 	
 	<body>
@@ -26,6 +25,8 @@
 						<button type="button" class="btn btn-primary" onClick="ui.start()">Start Game</button><br/>
 						<br>
 						<button type="button" class="btn btn-primary" onClick="ui.settings()">Settings</button><br/>
+                        <br>
+                        <button type="button" class="btn btn-primary" onClick="ui.songList()">Songs</button><br/>
 					</div>
 				</div>
 			</div>
@@ -44,6 +45,17 @@
 				</div>
 			</div>
 
+			<div class="section slideup" id="songList">
+					<ul class="list-group" style="width: 80%; margin: auto auto; color: black;">
+						<li class="list-group-item">I want it that way - Backstreet Boys</li>
+						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
+						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
+						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
+						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
+						<button type="button" class="btn btn-primary" onClick="ui.main()" style="width:100%">Back to main menu</button>
+					</ul>		
+			</div>
+
 			<div class="section slideup" id="game">
 				<h3>Game</h3>
 				<p id="status" class="subtitle">Connecting to the Java server...</p>
@@ -55,5 +67,6 @@
 				</div>
 			</div>
 		</div>
+		<script src="script.js"></script>
 	</body>
 </html>
