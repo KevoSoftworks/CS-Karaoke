@@ -79,16 +79,17 @@ PROCESS(reset, SCLK)
 			IF c >= nr_of_bytes THEN c := 0; END IF; --reset counter c
 			IF c = 0 THEN 
 				MISO <= std_zero(15 - i); --start sending nr. of zero crossings
-				display1 <= hex2display(std_zero(3 DOWNTO 0)); --also display nr. of zero crossings
+				display1 <= hex2display(std_zero(3 DOWNTO 0)); --also display zerocrossings for debugging
 	 			display2 <= hex2display(std_zero(7 DOWNTO 4));
 	 			display3 <= hex2display(std_zero(11 DOWNTO 8));
 	 			display4 <= hex2display(std_zero(15 DOWNTO 12));
-			ELSIF c = 2 THEN
-				MISO <= timeframe(15 - i); --sending timeframe information
+			ELSIF c = 2 THEN --sending timeframe information
+				MISO <= timeframe(15 - i); 
 				IF i = 0 THEN
 					IF TO_INTEGER(UNSIGNED(code(12 DOWNTO 0))) < 4 THEN nr_of_bytes := 4;
 					ELSE nr_of_bytes := TO_INTEGER(UNSIGNED(code(12 DOWNTO 0))) + 1; END IF;
-					zerocrossings := 0;
+					zerocrossings := 0; 
+					std_zero := "0000000000000000";
 				END IF;
 			ELSIF c = 4 AND i = 0 THEN timeframe := code; MISO <= '0'; --set output to 0 again
 			ELSIF c = 6 AND i = 0 THEN --determine initial amplitude sign
