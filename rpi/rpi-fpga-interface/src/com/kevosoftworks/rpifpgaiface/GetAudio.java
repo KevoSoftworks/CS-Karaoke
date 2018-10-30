@@ -1,12 +1,8 @@
 package com.kevosoftworks.rpifpgaiface;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
@@ -17,6 +13,7 @@ public class GetAudio {
 	TargetDataLine microphone;
 	SourceDataLine speakers;
 	SPIInterface spi = new SPIInterface();
+	
 	public GetAudio() {
 		AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
 		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();
@@ -37,15 +34,7 @@ public class GetAudio {
 			e.printStackTrace();
 		}
 		
-		/*try {
-			microphone = (TargetDataLine) AudioSystem.getLine(targetInfo);
-			
-		} catch (Exception e) {
-			System.err.println(e);
-		}*/
-		
-		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
-		
+		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);	
 		try {
 			speakers = (SourceDataLine) mixer.getLine(sourceInfo);
 			speakers.open(format);
@@ -53,16 +42,6 @@ public class GetAudio {
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
-		
-		/*try {
-			speakers = (SourceDataLine) AudioSystem.getLine(sourceInfo);
-			
-		} catch (Exception e) {
-			System.err.println(e);
-		}*/	
-		
-//		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
-//		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
 	}
 	
 	public void start() {
@@ -70,13 +49,13 @@ public class GetAudio {
 		int numBytesRead;
 		byte[] targetData = new byte[1020];
 		System.out.println(microphone.getBufferSize());
-		PlayAudio player = new PlayAudio();
 		FileOutputStream stream = null;
 		
 		while (true) {
 			numBytesRead = microphone.read(targetData, 0, targetData.length);
 			speakers.write(targetData.clone(), 0, targetData.length);
 			long time = System.currentTimeMillis() - startTime;
+			
 			try {
 				Packet pack = new Packet(targetData, true, false, time);
 				byte[] res = spi.readByte(pack.getPacket());

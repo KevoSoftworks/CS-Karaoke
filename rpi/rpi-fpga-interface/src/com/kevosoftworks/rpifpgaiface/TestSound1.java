@@ -23,7 +23,6 @@ public class TestSound1 {
 			
 			int numBytesRead;
 			byte[] targetData = new byte[microphone.getBufferSize() / 5];
-			PlayAudio player = new PlayAudio();
 
 			while (true) {
 				numBytesRead = microphone.read(targetData, 0, targetData.length);
@@ -35,7 +34,6 @@ public class TestSound1 {
 				if (numBytesRead == -1)	break;
 
 				speakers.write(targetData, 0, numBytesRead);
-				// player.playSound(targetData, numBytesRead);
 				// System.out.println(speakers);
 				
 			}

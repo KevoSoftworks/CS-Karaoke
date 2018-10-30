@@ -26,7 +26,6 @@ public class Main implements Runnable{
 		try {
 			s.sendOriginal();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
