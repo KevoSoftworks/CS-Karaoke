@@ -14,6 +14,20 @@ p{
 	margin: 0 0;
 }
 
+li:hover { 
+	background-color: #e0e0e0;  
+}
+
+.status {
+	float:right;
+	padding-top: 5px;
+    padding-right: 9px;
+}
+
+.mainmenubtn{
+	font-size: 20px;
+}
+
 .wrapper{
 	height: 460;
 	width: 100%;
@@ -25,10 +39,6 @@ p{
 	margin: 4vw 15vw;
 	width: 70vw;
 	transition: all 0.5s ease;
-}
-
-.subsection{
-
 }
 
 .content{
@@ -71,6 +81,7 @@ h3{
 	font-size: 24px;
 	padding: 12.5px 5vw;
 	margin: 0 0;
+	text-align: center;
 }
 
 .subtitle{

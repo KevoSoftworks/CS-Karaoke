@@ -20,44 +20,42 @@
 				<h3>Main menu</h3>
 				<p class="subtitle">&nbsp;</p>
 				
-				<div class="subsection">
-					<div class="text content">
-						<button type="button" class="btn btn-primary" onClick="ui.start()">Start Game</button><br/>
-						<br>
-						<button type="button" class="btn btn-primary" onClick="ui.settings()">Settings</button><br/>
-                        <br>
-                        <button type="button" class="btn btn-primary" onClick="ui.songList()">Songs</button><br/>
-					</div>
+				<div class="text content">
+					<button type="button" class="btn btn-primary mainmenubtn" onClick="ui.songList()">Start Game</button><br/>
+					<br>
+					<button type="button" class="btn btn-primary mainmenubtn" onClick="ui.settings()">Settings</button><br/>
 				</div>
 			</div>
 
 			<div class="section slideup" id="settings">
 				<h3>Settings</h3>
 				<p class="subtitle">&nbsp;</p>
-				<div class="subsection">
-					<div class="text content">
-						Gamemode: <select><option>Sing-along</option><option>Score me!</option></select><br/>
-						Sampling rate: <select><option>20kHz</option><option>40kHz</option></select><br/>
-						Bit width: <select><option>8bit</option><option>16bit</option></select></br>
-						<br/>
-						<button type="button" class="btn btn-primary" onClick="ui.main()">Back to main menu</button>
-					</div>
+				<div class="text content">
+					Gamemode: <select><option>Sing-along</option><option>Score me!</option></select><br/>
+					Sampling rate: <select><option>20kHz</option><option>40kHz</option></select><br/>
+					Bit width: <select><option>8bit</option><option>16bit</option></select></br>
+					<br/>
+					<button type="button" class="btn btn-primary" onClick="ui.main()">Back to main menu</button>
 				</div>
 			</div>
 
 			<div class="section slideup" id="songList">
-					<ul class="list-group" style="width: 80%; margin: auto auto; color: black; padding-top: 25px">
-						<li class="list-group-item">I Want It That Way - Backstreet Boys</li>
-						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
-						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
-						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
-						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
-						<button type="button" class="btn btn-primary" onClick="ui.main()" style="width:100%">Back to main menu</button>
-					</ul>
+				<h3>Songs</h3>
+				<ul class="list-group" style="width: 80%; margin: auto auto; color: black; padding-top: 25px">
+					<li class="list-group-item" >I Want It That Way - Backstreet Boys</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<button type="button" class="btn btn-primary" onClick="ui.main()" style="width:100%">Back to main menu</button>
+				</ul>
 			</div>		
 
 			<div class="section slideup" id="game">
-				<h3>Song: <span id="songIndicator"></span></h3>
+				<div>
+					<span class="status" id="status"></span>
+					<h3><span id="songIndicator"></span></h3>
+				</div>
 				<div class="alert alert-light" role="alert">
 					<span id="status"></span>
 				</div>
