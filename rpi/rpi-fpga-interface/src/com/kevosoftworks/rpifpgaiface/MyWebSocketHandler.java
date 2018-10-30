@@ -1,6 +1,8 @@
 package com.kevosoftworks.rpifpgaiface;
 
 import java.io.IOException;
+import java.util.HashMap;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -10,6 +12,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 @WebSocket
 public class MyWebSocketHandler {
+	HashMap<String, String> songtofile = new HashMap<String, String>();
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
@@ -29,10 +32,18 @@ public class MyWebSocketHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //put all the known songs into the hashmap with their filenames
+        songtofile.put("I want it that way - Backstreet Boys", "I_Want_It_That_Way");
+        
     }
 
     @OnWebSocketMessage
     public void onMessage(String message) {
         System.out.println("Message: " + message);
+        if(message.charAt(0) == 0) {
+        	String songfile = songtofile.get(message.substring(1, message.length()-1));
+            System.out.println(songfile);
+        }
+        
     }
 }
