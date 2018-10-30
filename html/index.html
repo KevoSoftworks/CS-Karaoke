@@ -46,23 +46,25 @@
 			</div>
 
 			<div class="section slideup" id="songList">
-					<ul class="list-group" style="width: 80%; margin: auto auto; color: black;">
+					<ul class="list-group" style="width: 80%; margin: auto auto; color: black; padding-top: 25px">
 						<li class="list-group-item">I want it that way - Backstreet Boys</li>
 						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
 						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
 						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
 						<li class="list-group-item">Lorem ipsum - Lorem ipsum</li>
 						<button type="button" class="btn btn-primary" onClick="ui.main()" style="width:100%">Back to main menu</button>
-					</ul>		
-			</div>
+					</ul>
+			</div>		
 
 			<div class="section slideup" id="game">
-				<h3>Game</h3>
-				<p id="status" class="subtitle">Connecting to the Java server...</p>
-
+				<h3>Song: <span id="songIndicator"></span></h3>
+				<div class="alert alert-light" role="alert">
+					<span id="status"></span>
+				</div>
+				
 				<div class="subsection">
 					<div id="gameWindow" class="text content">
-					
+								
 					</div>
 				</div>
 			</div>
