@@ -77,6 +77,7 @@ let game = {
 		},1000);
 	},
 	"tick4": function(){
+		ws.send("Starting");
 		setInterval(function(){
 			let add = Math.round(Math.random() * 100);
 			game.score += add;

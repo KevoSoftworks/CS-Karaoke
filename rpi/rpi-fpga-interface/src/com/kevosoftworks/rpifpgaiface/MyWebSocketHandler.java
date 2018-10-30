@@ -33,7 +33,7 @@ public class MyWebSocketHandler {
             e.printStackTrace();
         }
         //put all the known songs into the hashmap with their filenames
-        songtofile.put("I want it that way - Backstreet Boys", "I_Want_It_That_Way");
+        songtofile.put("I Want It That Way - Backstreet Boys", "I_Want_It_That_Way");
         
     }
 
@@ -41,8 +41,12 @@ public class MyWebSocketHandler {
     public void onMessage(String message) {
         System.out.println("Message: " + message);
         if(message.charAt(0) == 0) {
+        	//get the filename of the song the user selected
         	String songfile = songtofile.get(message.substring(1, message.length()-1));
             System.out.println(songfile);
+        } else if(message.equals("Starting")) {
+        	//the game is starting so the karaoke game should start
+        	
         }
         
     }
