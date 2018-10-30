@@ -25,10 +25,10 @@ public class SPIInterface {
 	public byte[] readByte(byte[] b){
 		byte[] ret = b.clone();
 		StringBuilder sb = new StringBuilder();
-	    for (byte bt : b) {
+	    /*for (byte bt : b) {
 	        sb.append(String.format("%02X ", bt));
 	    }
-	    System.out.println(sb.toString());
+	    System.out.println(sb.toString());*/
 		Spi.wiringPiSPIDataRW(0, ret);
 		return ret;
 	}

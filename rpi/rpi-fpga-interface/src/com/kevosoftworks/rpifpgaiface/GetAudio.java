@@ -6,22 +6,63 @@ import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
 public class GetAudio {
 	TargetDataLine microphone;
+	SourceDataLine speakers;
 	SPIInterface spi = new SPIInterface();
 	public GetAudio() {
-		AudioFormat format = new AudioFormat(8000, 8, 1, true, true);
+		AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
+		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();
+		
+		for (Mixer.Info info : mixInfos) {
+			System.out.println(info.getName() + "--------------" + info.getDescription());
+		}
+		
+		// change the index in the mixinfos[] until it has the correct driver.
+		Mixer mixer = AudioSystem.getMixer(mixInfos[2]);
 		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
+		
 		try {
-			microphone = (TargetDataLine) AudioSystem.getLine(targetInfo);
+			microphone = (TargetDataLine) mixer.getLine(targetInfo);
 			microphone.open(format);
 			microphone.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
+		/*try {
+			microphone = (TargetDataLine) AudioSystem.getLine(targetInfo);
+			
 		} catch (Exception e) {
 			System.err.println(e);
+		}*/
+		
+		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
+		
+		try {
+			speakers = (SourceDataLine) mixer.getLine(sourceInfo);
+			speakers.open(format);
+			speakers.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
 		}
+		
+		/*try {
+			speakers = (SourceDataLine) AudioSystem.getLine(sourceInfo);
+			
+		} catch (Exception e) {
+			System.err.println(e);
+		}*/	
+		
+//		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
+//		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
 	}
 	
 	public void start() {
@@ -34,15 +75,20 @@ public class GetAudio {
 		
 		while (true) {
 			numBytesRead = microphone.read(targetData, 0, targetData.length);
-			player.playSound(targetData, numBytesRead);
+			speakers.write(targetData.clone(), 0, targetData.length);
 			long time = System.currentTimeMillis() - startTime;
 			try {
 				Packet pack = new Packet(targetData, true, false, time);
-				spi.readByte(pack.getPacket());
-				System.out.println(pack.getPacket().length);
+				byte[] res = spi.readByte(pack.getPacket());
+				StringBuilder sb = new StringBuilder();
+			    for (int i = 0; i < 4; i++) {
+			        sb.append(String.format("%02X ", res[i]));
+			    }
+			    System.out.println(sb.toString());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 			if (numBytesRead == -1)	break;
 		}
 	}
