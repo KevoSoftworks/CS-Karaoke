@@ -17,11 +17,11 @@ public class Packet {
 	
 	public Packet(byte[] data, boolean isRec, boolean sendScore, long time) throws Exception{
 		byte[] p = new byte[4];
-		if(data.length + 4 > 1024) throw new Exception("Packet length too long (max 1024)");
-		time *= 100;
+		if(data.length + 3 > 1024) throw new Exception("Packet length too long (max 1024)");
+		time /= 100;
 		
-		p[0] = (byte)(data.length + 4 >> 8);
-		p[1] = (byte)(data.length + 4);
+		p[0] = (byte)(data.length + 3 >> 8);
+		p[1] = (byte)(data.length + 3);
 		p[2] = (byte)(time >> 8);
 		p[3] = (byte)(time);
 		if(isRec) p[0] |= 0b10000000;

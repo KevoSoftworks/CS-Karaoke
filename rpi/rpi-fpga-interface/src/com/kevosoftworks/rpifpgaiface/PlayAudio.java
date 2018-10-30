@@ -9,29 +9,19 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
 public class PlayAudio {
-	SourceDataLine speakers;
+	
 	
 	public PlayAudio() {
+		AudioFormat format = new AudioFormat(8000, 8, 1, true, true);
 		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();
 		
-		// change the index in the mixinfos[] until it has the correct driver.
-		Mixer mixer = AudioSystem.getMixer(mixInfos[0]);
-		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
-		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
-		
-		try {
-			speakers = (SourceDataLine) mixer.getLine(sourceInfo);
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
+		for (Mixer.Info info : mixInfos) {
+			System.out.println(info.getName() + "--------------" + info.getDescription());
 		}
 		
-		try {
-			speakers = (SourceDataLine) AudioSystem.getLine(sourceInfo);
-			speakers.open(format);
-			speakers.start();
-		} catch (Exception e) {
-			System.err.println(e);
-		}	
+		// change the index in the mixinfos[] until it has the correct driver.
+		Mixer mixer = AudioSystem.getMixer(mixInfos[2]);
+		
 		
 //		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
 //		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
