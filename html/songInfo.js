@@ -85,7 +85,6 @@ function getNextSongText(song, currentIndex, currentTime) {
     indexToCheck = currentIndex + 1;
 
     if (indexToCheck == song.length || currentIndex === 0) {
-        console.log("-");
         return "";
     }
 
