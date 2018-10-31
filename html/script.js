@@ -15,7 +15,7 @@ var ws = new WebSocket("ws://127.0.0.1:8080/");
     ws.onerror = function(err) {
         console.log("Error: " + err);
     };
-    
+
 var lis = document.getElementsByTagName("li");
 var activeSong = lis[0].textContent;
 for (let i = 0; i < lis.length; i += 1) {
@@ -40,7 +40,7 @@ let ui = {
 		document.getElementById("songList").classList.add("slideup");
 		document.getElementById("main").classList.remove("slideup");
 	},
-	
+
 	"settings": function(){
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");
@@ -78,7 +78,7 @@ let game = {
 	},
 	"tick4": function(){
 		ws.send("Starting");
-		startSong("I Want It That Way - Backstreet Boys");
+		move();
 		setInterval(function(){
 			let add = Math.round(Math.random() * 100);
 			game.score += add;
@@ -86,4 +86,19 @@ let game = {
 			document.getElementById("barInner").setAttribute("style", `width: ${add}%`);
 		}, 250);
 	}
+}
+
+
+function move(){
+  var elem = document.getElementById("myBar");
+  var width = 1;
+  var id= setInterval(frame, 1);
+  function frame(){
+      if(width >= 100){
+        clearInterval(id);
+      } else {
+        width = width + 1/250;
+        elem.style.width = width +'%';
+      }
+  }
 }

@@ -138,3 +138,16 @@ h3{
 .barInner{
 	background-color: #9b0000;
 }
+
+#myProgress{
+	width:100%;
+	background-color: grey;
+	border-radius: 25px;
+}
+
+#myBar{
+	width: 1%;
+	height: 15px;
+	background-color: green;
+	border-radius: 25px;
+}
