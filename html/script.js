@@ -57,7 +57,13 @@ let ui = {
 let game = {
 	"score": 0,
 	"init": function(){
+		// set active song
 		document.getElementById("songIndicator").innerHTML = activeSong;
+
+		// set time
+		let song = songs[activeSong];
+		timeIndicator.textContent = secondsToTimeString(0) + " / " + secondsToTimeString(song[song.length - 1][1]);
+
 		setTimeout(function(){
 			document.getElementById("status").innerHTML = "Connected";
 			document.getElementById("gameWindow").innerHTML = "<span style='font-size: 32px'>Starting in 3...</span>";
@@ -78,7 +84,7 @@ let game = {
 	},
 	"tick4": function(){
 		ws.send("Starting");
-		startSong("I Want It That Way - Backstreet Boys");
+		startSong(activeSong);
 		setInterval(function(){
 			let add = Math.round(Math.random() * 100);
 			game.score += add;

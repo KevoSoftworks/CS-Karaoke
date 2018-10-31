@@ -9,7 +9,6 @@
     ]
 */
 
-// TIME 40 is WRONG
 songs = {
     "I Want It That Way - Backstreet Boys": [
         ["Yeah-eh-heah", 0],
@@ -69,6 +68,7 @@ songs = {
     ],
 }
 
+// Converts seconds to a time string. For example: 84 returns 01:24.
 function secondsToTimeString(seconds) {
     minutes = Math.floor(seconds / 60);
     if (minutes < 10) {
@@ -81,20 +81,39 @@ function secondsToTimeString(seconds) {
     return minutes + ":" + seconds;
 }
 
+function getNextSongText(song, currentIndex, currentTime) {
+    indexToCheck = currentIndex + 1;
+
+    if (indexToCheck == song.length || currentIndex === 0) {
+        console.log("-");
+        return "";
+    }
+
+    console.log("currentTime: " + currentTime);
+    console.log("song time: " + song[currentIndex][1]);
+
+    if (Math.abs(currentTime - song[currentIndex][1]) <= 2 && Math.abs(currentTime - song[currentIndex][1]) != 0) {
+        return song[currentIndex][0];
+    }
+
+    return "";
+}
+
+// Start a song with a particular songName
 function startSong(songName) {
     let song = songs[songName];
     let waitTime = 1000;
     let timeSeconds = 0;
     let currentIndex = 0;
     let lyricsRuleHtml = document.getElementById("lyricsRule");
+    let nextLyricsRule = document.getElementById("nextLyricsRule");
     let timeIndicator = document.getElementById("timeIndicator");
 
     var timeInterval = setInterval(function() {
         timeIndicator.textContent = secondsToTimeString(timeSeconds) + " / " + secondsToTimeString(song[song.length - 1][1]);
-
+        nextLyricsRule.textContent = getNextSongText(song, currentIndex, timeSeconds);
         if (timeSeconds === song[currentIndex][1]) {
-            var lyricsRule = song[currentIndex][0];
-            lyricsRuleHtml.textContent = lyricsRule;
+            lyricsRuleHtml.textContent = song[currentIndex][0];
             currentIndex += 1;
             if (currentIndex === song.length) {
                 setInterval(function() {
@@ -104,7 +123,6 @@ function startSong(songName) {
                 return;
             }
         }
-
         timeSeconds += waitTime / 1000;
     }, waitTime);
 }
