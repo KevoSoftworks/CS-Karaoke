@@ -50,9 +50,14 @@ PROCESS(reset, SCLK)
 	VARIABLE i : INTEGER := 0;
 	VARIABLE c : INTEGER := 0;
 	VARIABLE code : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
+	--used for reading data input from MOSI
+	VARIABLE converted : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
+	--because of msbits and lsbytes
 	VARIABLE timeframe : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
-	VARIABLE nr_of_bytes : INTEGER range 4 to 1024;
-	CONSTANT marge : INTEGER := 256;
+	--information about the timeframe of the audio samples are stored in here
+	VARIABLE nr_of_bytes : INTEGER range 4 to 8192;
+	CONSTANT marge : INTEGER := 512;
+	--level of trigger for zero crossings
 	VARIABLE zerocrossings : INTEGER := 0;
 	VARIABLE amplitudesign : STD_LOGIC;
 	VARIABLE std_zero : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
@@ -69,39 +74,41 @@ PROCESS(reset, SCLK)
 	 		display4 <= hex2display("0000");
 	 		display5 <= hex2display("0000");
 	 		display6 <= hex2display("0000");
-		ELSIF SCLK'event AND SCLK = '1' THEN
-			code(15-i) := MOSI;
+		ELSIF SCLK'event AND SCLK = '1' THEN --active edge of SPI clock
+			code(15-i) := MOSI; --read input
+			converted := code(7 DOWNTO 0) & code(15 DOWNTO 8);
 			i := i + 1;
-			IF i = 16 THEN i := 0; c := c + 2; END IF;
-			IF c >= nr_of_bytes THEN c := 0; END IF;
-			IF c = 0 THEN MISO <= std_zero(15 - i);
-			ELSIF c = 2 THEN
-				MISO <= timeframe(15 - i);
+			IF i = 16 THEN i := 0; c := c + 2; END IF; --reset i, increment c
+			IF c >= nr_of_bytes THEN c := 0; END IF; --reset counter c
+			IF c = 0 THEN 
+				MISO <= std_zero(15-i); --start sending nr. of zero crossings
+			ELSIF c = 2 THEN --sending timeframe information
+				display1 <= hex2display(timeframe(3 DOWNTO 0)); --also display zerocrossings for debugging
+	 			display2 <= hex2display(timeframe(7 DOWNTO 4));
+	 			display3 <= hex2display(timeframe(11 DOWNTO 8));
+	 			display4 <= hex2display(timeframe(15 DOWNTO 12));
+				MISO <= timeframe(15-i); 
 				IF i = 0 THEN
-					nr_of_bytes := TO_INTEGER(UNSIGNED(code(9 DOWNTO 0))) + 1;
-					zerocrossings := 0;
+					IF TO_INTEGER(UNSIGNED(converted(12 DOWNTO 0))) < 4 THEN nr_of_bytes := 4;
+					ELSE nr_of_bytes := TO_INTEGER(UNSIGNED(converted(12 DOWNTO 0))) + 1; END IF;
+					zerocrossings := 0; 
+					std_zero := "0000000000000000";
 				END IF;
-			ELSIF c = 4 AND i = 0 THEN timeframe := code; MISO <= '0';
-			ELSIF c = 6 AND i = 0 THEN 
-				IF TO_INTEGER(SIGNED(code)) < 0 THEN amplitudesign := '0'; 
-				ELSIF TO_INTEGER(SIGNED(code)) > 0 THEN amplitudesign := '1';
+			ELSIF c = 4 AND i = 0 THEN timeframe := converted; MISO <= '0'; --set output to 0 again
+			ELSIF c = 6 AND i = 0 THEN --determine initial amplitude sign
+				IF TO_INTEGER(SIGNED(converted)) > 0 THEN amplitudesign := '1';
 				END IF;
-			ELSIF c > 6 AND i = 0 THEN
-				IF TO_INTEGER(SIGNED(code)) < -marge AND amplitudesign = '1' THEN
+			ELSIF c > 6 AND i = 0 THEN --determine if the current data has crossed zero
+				IF TO_INTEGER(SIGNED(converted)) < -marge AND amplitudesign = '1' THEN
 					zerocrossings := zerocrossings + 1;
 					amplitudesign := '0';
 					std_zero := STD_LOGIC_VECTOR(TO_UNSIGNED(zerocrossings, 16));
-				ELSIF TO_INTEGER(SIGNED(code)) > marge AND amplitudesign = '0' THEN
+				ELSIF TO_INTEGER(SIGNED(converted)) > marge AND amplitudesign = '0' THEN
 					zerocrossings := zerocrossings + 1;
 					amplitudesign := '1';
 					std_zero := STD_LOGIC_VECTOR(TO_UNSIGNED(zerocrossings, 16));
 				END IF;
 			END IF;
-			display1 <= hex2display(timeframe(3 DOWNTO 0));
-	 		display2 <= hex2display(timeframe(7 DOWNTO 4));
-	 		display3 <= hex2display(timeframe(11 DOWNTO 8));
-	 		display4 <= hex2display(timeframe(15 DOWNTO 12));
 		END IF;
 	END PROCESS;
-
 END;

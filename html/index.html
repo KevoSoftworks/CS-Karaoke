@@ -1,9 +1,9 @@
 <html>
 	<head>
 		<title>Karaoke</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
-		<script src="script.js"></script>
 	</head>
 	
 	<body>
@@ -20,38 +20,52 @@
 				<h3>Main menu</h3>
 				<p class="subtitle">&nbsp;</p>
 				
-				<div class="subsection">
-					<div class="text content">
-						<button onClick="ui.start()">Start Game</button><br/>
-						<button onClick="ui.settings()">Settings</button><br/>
-					</div>
+				<div class="text content">
+					<button type="button" class="btn btn-primary mainmenubtn" onClick="ui.songList()">Start Game</button><br/>
+					<br>
+					<button type="button" class="btn btn-primary mainmenubtn" onClick="ui.settings()">Settings</button><br/>
 				</div>
 			</div>
 
 			<div class="section slideup" id="settings">
 				<h3>Settings</h3>
 				<p class="subtitle">&nbsp;</p>
-				<div class="subsection">
-					<div class="text content">
-						Gamemode: <select><option>Sing-along</option><option>Score me!</option></select><br/>
-						Sampling rate: <select><option>20kHz</option><option>40kHz</option></select><br/>
-						Bit width: <select><option>8bit</option><option>16bit</option></select></br>
-						<br/>
-						<button onClick="ui.main()">Back to main menu</button>
-					</div>
+				<div class="text content">
+					Gamemode: <select><option>Sing-along</option><option>Score me!</option></select><br/>
+					Sampling rate: <select><option>20kHz</option><option>40kHz</option></select><br/>
+					Bit width: <select><option>8bit</option><option>16bit</option></select></br>
+					<br/>
+					<button type="button" class="btn btn-primary" onClick="ui.main()">Back to main menu</button>
 				</div>
 			</div>
 
-			<div class="section slideup" id="game">
-				<h3>Game</h3>
-				<p id="status" class="subtitle">Connecting to the Java server...</p>
+			<div class="section slideup" id="songList">
+				<h3>Songs</h3>
+				<ul class="list-group" style="width: 80%; margin: auto auto; color: black; padding-top: 25px">
+					<li class="list-group-item" >I Want It That Way - Backstreet Boys</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<li class="list-group-item" >Lorem ipsum - Lorem ipsum</li>
+					<button type="button" class="btn btn-primary" onClick="ui.main()" style="width:100%">Back to main menu</button>
+				</ul>
+			</div>		
 
+			<div class="section slideup" id="game">
+				<div>
+					<span class="status" id="status"></span>
+					<h3><span id="songIndicator"></span></h3>
+				</div>
+				<h3 id="lyricsRule"> - Lyrics - </h3>
+				<p id="timeIndicator" style="padding: 7px;"></p>
 				<div class="subsection">
 					<div id="gameWindow" class="text content">
-					
+								
 					</div>
 				</div>
 			</div>
 		</div>
+		<script src="songInfo.js"></script>
+		<script src="script.js"></script>
 	</body>
 </html>

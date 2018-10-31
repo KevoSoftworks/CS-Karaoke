@@ -1,5 +1,6 @@
 html{
 	font-family: 'Nunito', sans-serif;
+	
 }
 
 body{
@@ -13,24 +14,36 @@ p{
 	margin: 0 0;
 }
 
+li:hover { 
+	background-color: #e0e0e0;  
+}
+
+.status {
+	float:right;
+	padding-top: 5px;
+    padding-right: 9px;
+}
+
+.mainmenubtn{
+	font-size: 20px;
+}
+
 .wrapper{
-	
+	height: 460;
+	width: 100%;
 }
 
 .section{
+	background-color: #38AECC;
+	height: 100%;
 	margin: 4vw 15vw;
-	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	width: 70vw;
 	transition: all 0.5s ease;
 }
 
-.subsection{
-
-}
-
 .content{
 	text-align: center;
-	background-color: #484848;
+	background-color: #38AECC;
 }
 
 .text{
@@ -63,15 +76,16 @@ h2{
 }
 
 h3{
-	background-color: #d50000;
+	background-color: #0090C1;
 	font-weight: 700;
 	font-size: 24px;
 	padding: 12.5px 5vw;
 	margin: 0 0;
+	text-align: center;
 }
 
 .subtitle{
-	background-color: #9b0000;
+	background-color: #38AECC;
 	padding: 2px 15vw;
 }
 
@@ -92,13 +106,13 @@ h3{
 .header-text{
 	box-sizing: border-box;
 	position: absolute;
+	border-radius: 10px;
 	top: 20vh;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	text-align: center;
-	background-color: rgba(0.2, 0.2, 0.2, 0.4);
+	background-color: rgb(4, 7, 175, 0.8);
 	padding: 20px 50px;
-	box-shadow: inset 0px 0px 10px rgba(0.4, 0.2, 0.2, 0.8);
 }
 
 .slideup{

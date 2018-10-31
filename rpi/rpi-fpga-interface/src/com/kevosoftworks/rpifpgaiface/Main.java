@@ -6,15 +6,19 @@ public class Main implements Runnable{
 	Thread thread;	
 	SPIInterface si;
 	Song s;
+	ServerStart serverStart;
 	
 	public Main(String file){
 		si = new SPIInterface();
 		s = new Song(si, file);
+		serverStart = new ServerStart();
 	}
 	
 	public Main(){
 		si = new SPIInterface();
 		s = new Song(si);
+		serverStart = new ServerStart();
+		serverStart.start();
 	}
 
 	@Override
