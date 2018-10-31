@@ -6,7 +6,6 @@ public class Main implements Runnable{
 	Thread thread;	
 	SPIInterface si;
 	Song s;
-	GetAudio a;
 	ServerStart serverStart;
 	
 	public Main(String file){
@@ -18,20 +17,13 @@ public class Main implements Runnable{
 	public Main(){
 		si = new SPIInterface();
 		s = new Song(si);
-		a = new GetAudio();
 		serverStart = new ServerStart();
 		serverStart.start();
 	}
 
 	@Override
 	public void run() {
-		a.start();
-		s.convertOriginal();
-		try {
-			s.sendOriginal();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		s.startRecord();
 	}
 	
 	public static void main(String[] args){
