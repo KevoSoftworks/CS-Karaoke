@@ -36,7 +36,7 @@ public class MyWebSocketHandler {
         songtofile.put("I Want It That Way - Backstreet Boys", "i-want-it-that-way");
         songtofile.put("Never Gonna Give You Up - Rick Astley", "never-gonna-give-you-up");
         songtofile.put("Don't Stop Believin' - Journey", "dont-stop-believin");
-        
+        songtofile.put("Wonderwall - Oasis", "wonderwall");
     }
 
     @OnWebSocketMessage
