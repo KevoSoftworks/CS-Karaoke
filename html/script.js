@@ -78,6 +78,7 @@ let game = {
 	},
 	"tick4": function(){
 		ws.send("Starting");
+		startSong("I Want It That Way - Backstreet Boys");
 		setInterval(function(){
 			let add = Math.round(Math.random() * 100);
 			game.score += add;
