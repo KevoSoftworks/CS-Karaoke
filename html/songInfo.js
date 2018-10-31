@@ -1,6 +1,6 @@
-// This file contains the sentences to be displayed with the time amount 
+// This file contains the sentences to be displayed with the time amount
 // that it should be displayed on the screen for every song.
-/* 
+/*
     Example:
     "I want it that way": [
         ["Sentence 1", 0.5],
@@ -66,6 +66,7 @@ songs = {
         ["I never want to hear you say \n (Never want to hear you say it) ", 194],
         ["I want it that way", 198],
         ["'Cause I want it that way", 203],
+        ["Song has ended.",214]
     ],
 }
 
