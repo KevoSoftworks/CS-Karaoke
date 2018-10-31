@@ -84,16 +84,16 @@ function secondsToTimeString(seconds) {
 function getNextSongText(song, currentIndex, currentTime) {
     indexToCheck = currentIndex + 1;
 
-    if (indexToCheck == song.length || currentIndex === 0) {
+    if (indexToCheck == song.length) {
         return "";
     }
 
     console.log("currentTime: " + currentTime);
     console.log("song time: " + song[currentIndex][1]);
 
-    if (Math.abs(currentTime - song[currentIndex][1]) <= 2 && Math.abs(currentTime - song[currentIndex][1]) != 0) {
+    //if (Math.abs(currentTime - song[currentIndex][1]) <= 2 && Math.abs(currentTime - song[currentIndex][1]) != 0) {
         return song[currentIndex][0];
-    }
+    //}
 
     return "";
 }
