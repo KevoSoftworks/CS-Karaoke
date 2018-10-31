@@ -9,4 +9,8 @@
 <fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioController"/>
 <fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioFactory"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
+<fullyQualifiedTypeName name="java.io.BufferedInputStream"/>
+<fullyQualifiedTypeName name="javax.sound.sampled.AudioFormat.Encoding"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>

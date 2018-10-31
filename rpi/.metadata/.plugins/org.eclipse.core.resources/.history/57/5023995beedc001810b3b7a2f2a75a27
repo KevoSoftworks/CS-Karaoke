@@ -1,0 +1,157 @@
+package com.kevosoftworks.rpifpgaiface;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
+public class Song {
+	
+	public static final String DEFAULT = "audio.wav";
+	
+	String name;
+	SPIInterface spi;
+	AudioHandler audio;
+	boolean isPlaying = false;
+	
+	ArrayList<byte[]> original;
+	ArrayList<Integer> originZeroCross;
+	ArrayList<byte[]> record;
+	ArrayList<Integer> recordZeroCross;
+	ArrayList<byte[]> playback;
+	
+	public Song(SPIInterface spi){
+		this(spi, DEFAULT);
+	}
+	
+	public Song(SPIInterface spi, String name){
+		this.spi = spi;
+		this.name = name;
+		this.original = new ArrayList<byte[]>();
+		this.originZeroCross = new ArrayList<Integer>();
+		this.record = new ArrayList<byte[]>();
+		this.recordZeroCross = new ArrayList<Integer>();
+		this.playback = new ArrayList<byte[]>();
+		
+		this.audio = new AudioHandler(44100, 16, 1, 4000);
+		
+		try {
+			this.loadSong();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadSong() throws IOException{	
+		this.convertPlayback();
+		this.convertOriginal();
+		this.sendOriginal();
+	}
+	
+	private void convertPlayback() throws IOException{
+		byte[] wave = new byte[4000];
+		byte[] sampleRate = new byte[4];
+		BufferedInputStream in = new BufferedInputStream(Song.class.getResourceAsStream("/playback/" + this.name));
+
+		int bytesRead = 1;
+		while(bytesRead > 0){
+			bytesRead = in.read(wave);
+			playback.add(wave.clone());
+			sampleRate[0] = wave[24];
+			sampleRate[1] = wave[25];
+			sampleRate[2] = wave[26];
+			sampleRate[3] = wave[27];
+			break;
+		}
+		
+		long sr1 = sampleRate[0] + (sampleRate[1] << 8) + (sampleRate[2] << 16) + (sampleRate[3] << 24);
+		long sr2 = sampleRate[3] + (sampleRate[2] << 8) + (sampleRate[1] << 16) + (sampleRate[0] << 24);
+		sampleRate = reverseBitOrder(sampleRate);
+		long sr3 = sampleRate[0] + (sampleRate[1] << 8) + (sampleRate[2] << 16) + (sampleRate[3] << 24);
+		long sr4 = sampleRate[3] + (sampleRate[2] << 8) + (sampleRate[1] << 16) + (sampleRate[0] << 24);
+		System.out.println(sr1);
+		System.out.println(sr2);
+		System.out.println(sr3);
+		System.out.println(sr4);
+		
+		System.out.println("Playback: " + playback.size());
+	}
+	
+	private void convertOriginal() throws IOException{
+		byte[] wave = new byte[4000];
+		BufferedInputStream in = new BufferedInputStream(Song.class.getResourceAsStream("/vocals/" + this.name));
+
+		int bytesRead = 1;
+		while(bytesRead > 0){
+			bytesRead = in.read(wave);
+			original.add(wave.clone());
+		}
+		System.out.println("Original: " + original.size());
+	}
+	
+	private void sendOriginal(){
+		boolean firstByte = false;
+		for(int i = 0; i < original.size(); i++){
+			Packet p = new Packet(original.get(i), false, false, i);
+			byte[] result = spi.readByte(p.getPacket());
+			
+			if(firstByte){
+				//long key = this.byteArrToInt(result, 2);
+				int cross = this.byteArrToInt(result, 0);
+				this.originZeroCross.add(cross);
+			}
+			firstByte = true;
+		}
+	}
+	
+	public void startRecord(){
+		System.out.println("Play started!");
+		isPlaying = true;
+		int frame = 0;
+		while(isPlaying){
+			if(frame >= playback.size()){
+				isPlaying = false;
+				continue;
+			}
+			
+			byte[] buf = audio.recordBuffer();
+			this.record.add(buf.clone());
+
+			audio.playBuffer(playback.get(frame));
+			
+			Packet p = new Packet(buf, false, false, frame);
+			byte[] res = spi.readByte(p.getPacket());
+			
+			System.out.println(res[0] + "; " + res[1] + "; " + res[2] + "; " + res[3] + ";\n");
+			
+			if(frame > 0){
+				//long key = this.byteArrToInt(res, 2);
+				int cross = this.byteArrToInt(res, 0);
+				this.recordZeroCross.add(cross);
+			}
+			
+			if(frame % 100 == 25) System.out.println("Song: " + originZeroCross.get(frame-1) + "; You: " + recordZeroCross.get(frame-1));
+			
+			frame++;
+		}
+	}
+	
+	private int byteArrToInt(byte[] in, int offset){
+		return (in[offset] + (in[offset + 1] << 8));
+	}
+	
+	private byte[] reverseBitOrder(byte[] in){
+		//Each 16 bit package
+		byte[] out = new byte[in.length];
+		for(int i = 0; i < in.length; i++){
+			for(int j = 0; j < 8; j++){
+				out[i] += ((in[i] & 1) << (7-j));
+			}
+		}
+		return out;
+	}
+
+}
