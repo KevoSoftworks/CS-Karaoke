@@ -35,6 +35,7 @@ public class MyWebSocketHandler {
         //put all the known songs into the hashmap with their filenames
         songtofile.put("I Want It That Way - Backstreet Boys", "i-want-it-that-way");
         songtofile.put("Never Gonna Give You Up - Rick Astley", "never-gonna-give-you-up");
+        songtofile.put("Don't Stop Believin' - Journey", "dont-stop-believin");
         
     }
 
