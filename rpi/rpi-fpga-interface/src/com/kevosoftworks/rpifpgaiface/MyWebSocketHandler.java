@@ -47,7 +47,6 @@ public class MyWebSocketHandler {
         } else if(message.equals("Starting")) {
         	//the game is starting so the karaoke game should start
         	
-        }
-        
+        }    
     }
 }
