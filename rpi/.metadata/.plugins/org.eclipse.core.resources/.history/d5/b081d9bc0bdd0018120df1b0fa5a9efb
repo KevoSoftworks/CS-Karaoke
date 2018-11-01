@@ -1,0 +1,54 @@
+package com.kevosoftworks.rpifpgaiface;
+
+public class Main implements Runnable{
+	
+	static boolean running = false;
+	Thread thread;	
+	SPIInterface si;
+	Song s;
+	ServerStart serverStart;
+	
+	public Main(String file){
+		si = new SPIInterface();
+		s = new Song(si, file);
+		serverStart = new ServerStart();
+	}
+	
+	public Main(){
+		si = new SPIInterface();
+		s = new Song(si);
+		serverStart = new ServerStart();
+		serverStart.start();
+	}
+
+	@Override
+	public void run() {
+		s.startRecord();
+	}
+	
+	public static void main(String[] args){
+		if(args.length == 1){
+			new Main(args[0]).start();
+		} else {
+			new Main().start();
+		}
+	}
+	
+	public synchronized void start(){
+		if(running) return;
+		running = true;
+		thread = new Thread(this);
+		thread.start();
+	}
+	
+	public synchronized void stop(){
+		if(!running) return;
+		running = false;
+		try{
+			thread.join();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+}

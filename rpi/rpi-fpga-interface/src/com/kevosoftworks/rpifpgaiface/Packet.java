@@ -15,13 +15,15 @@ public class Packet {
 	
 	byte[] packet;
 	
-	public Packet(byte[] data, boolean isRec, boolean sendScore, long time){
-		byte[] p = new byte[4];
+	public Packet(byte[] data, boolean isRec, boolean sendScore, long time, int zeroCross){
+		byte[] p = new byte[6];
 		
-		p[0] = (byte)((data.length + 3) & 0xFF);
-		p[1] = (byte)(((data.length + 3) >> 8) & 0xFF);
+		p[0] = (byte)((data.length + 5) & 0xFF);
+		p[1] = (byte)(((data.length + 5) >> 8) & 0xFF);
 		p[2] = (byte)(time & 0xFF);
 		p[3] = (byte)((time >> 8) & 0xFF);
+		p[4] = (byte)(zeroCross & 0xFF);
+		p[5] = (byte)((zeroCross >> 8) & 0xFF);
 		if(isRec) p[1] |= 0b10000000;
 		if(sendScore) p[1] |= 0b01000000;
 		

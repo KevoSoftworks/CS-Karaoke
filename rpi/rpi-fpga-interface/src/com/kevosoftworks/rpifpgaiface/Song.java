@@ -2,26 +2,23 @@ package com.kevosoftworks.rpifpgaiface;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import javax.xml.bind.DatatypeConverter;
+import java.util.Arrays;
 
 public class Song {
 	
-	public static final String DEFAULT = "audio.wav";
+	public static final String DEFAULT = "i-want-it-that-way.wav";
 	
 	String name;
 	SPIInterface spi;
 	AudioHandler audio;
 	boolean isPlaying = false;
+	float score = 0;
 	
 	ArrayList<byte[]> original;
 	ArrayList<Integer> originZeroCross;
 	ArrayList<byte[]> record;
+	ArrayList<byte[]> fpgaModified;
 	ArrayList<Integer> recordZeroCross;
 	ArrayList<byte[]> playback;
 	
@@ -35,6 +32,7 @@ public class Song {
 		this.original = new ArrayList<byte[]>();
 		this.originZeroCross = new ArrayList<Integer>();
 		this.record = new ArrayList<byte[]>();
+		this.fpgaModified = new ArrayList<byte[]>();
 		this.recordZeroCross = new ArrayList<Integer>();
 		this.playback = new ArrayList<byte[]>();
 		
@@ -82,7 +80,7 @@ public class Song {
 	private void sendOriginal(){
 		boolean firstByte = false;
 		for(int i = 0; i < original.size(); i++){
-			Packet p = new Packet(original.get(i).clone(), false, false, i);
+			Packet p = new Packet(original.get(i).clone(), false, false, i, 0);
 			byte[] result = spi.readByte(p.getPacket());
 			
 			if(firstByte){
@@ -106,16 +104,21 @@ public class Song {
 			
 			byte[] buf = audio.recordBuffer();
 			this.record.add(buf.clone());
-
-			audio.playBuffer(playback.get(frame));
 			
-			Packet p = new Packet(buf, false, false, frame);
+			Packet p = new Packet(buf, false, false, frame, byteArrToInt(this.original.get(frame), 0));
 			byte[] res = spi.readByte(p.getPacket());
+			if(frame > 0) this.fpgaModified.add(frame - 1, Arrays.copyOfRange(res, 6, res.length));
+			if(frame > 0) audio.playBuffer(audio.mixBuffers(playback.get(frame - 1), fpgaModified.get(frame - 1)));
+			
 			
 			if(frame > 0){
 				//long key = this.byteArrToInt(res, 2);
 				int cross = this.byteArrToInt(res, 0);
 				this.recordZeroCross.add(cross);
+				float tmpScore = (float)cross / (float)this.originZeroCross.get(frame);
+				if(tmpScore > 1f) tmpScore = 1f - (tmpScore - 1f);
+				if(tmpScore < 0f) tmpScore = 0f;
+				this.score += tmpScore;
 			}
 			
 			if(frame > 1) System.out.println("Song: " + originZeroCross.get(frame-1) + "; You: " + recordZeroCross.get(frame-1));
@@ -125,7 +128,11 @@ public class Song {
 	}
 	
 	private int byteArrToInt(byte[] in, int offset){
-		return (in[offset] << 8 | (in[1] & 0xFF));
+		return (in[offset] << 8 | (in[offset + 1] & 0xFF));
+	}
+	
+	public int getCurrentScore(){
+		return (int)this.score;
 	}
 
 }

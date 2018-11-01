@@ -56,4 +56,27 @@ public class AudioHandler {
 	public void playBuffer(byte[] buf){
 		speakers.write(buf, 0, buf.length);
 	}
+	
+	public byte[] mixBuffers(byte[] b1, byte[] b2){
+		byte[] ret = new byte[b1.length];
+		
+		for(int i = 0; i < b1.length; i += 2){
+			short s1 = (short) ((b1[i+1] & 0xFF) << 8 | (b1[i] & 0xFF));
+			short s2 = (short) ((b2[i+1] & 0xFF) << 8 | (b2[i] & 0xFF));
+			
+			float sample1 = s1 / 32768f;
+			float sample2 = s2 / 32768f;
+			float sample = sample1 + sample2;
+			sample *= 0.7f;
+			if(sample > 1f) sample = 1f;
+			if(sample < -1f) sample = -1f;
+			
+			short iret = (short) (sample * 32768f);
+			
+			ret[i] = (byte)(iret & 0xFF);
+			ret[i+1] = (byte)((iret >> 8) & 0xFF);
+		}
+		
+		return ret;
+	}
 }
