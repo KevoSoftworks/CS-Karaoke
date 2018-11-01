@@ -81,20 +81,6 @@ function secondsToTimeString(seconds) {
     return minutes + ":" + seconds;
 }
 
-function move(){
-    var elem = document.getElementById("myBar");
-    var width = 1;
-    var id= setInterval(frame, 1);
-    function frame(){
-        if(width >= 100){
-          clearInterval(id);
-        } else {
-          width = width + 1/250;
-          elem.style.width = width +'%';
-        }
-    }
-  }
-
 function getNextSongText(song, currentIndex, currentTime) {
     indexToCheck = currentIndex + 1;
 
@@ -113,24 +99,8 @@ function getNextSongText(song, currentIndex, currentTime) {
     return "";
 }
 
-
-function move(){
-    var elem = document.getElementById("myBar");
-    var width = 1;
-    var id= setInterval(frame, 1);
-    function frame(){
-        if(width >= 100){
-          clearInterval(id);
-        } else {
-          width = width + 1/250;
-          elem.style.width = width +'%';
-        }
-    }
-  }
-
 // Start a song with a particular songName
 function startSong(songName) {
-    move();
     let song = songs[songName];
     let waitTime = 1000;
     let timeSeconds = 0;
@@ -138,10 +108,12 @@ function startSong(songName) {
     let lyricsRuleHtml = document.getElementById("lyricsRule");
     let nextLyricsRule = document.getElementById("nextLyricsRule");
     let timeIndicator = document.getElementById("timeIndicator");
+    let myBar = document.getElementById("myBar");
 
     var timeInterval = setInterval(function() {
         timeIndicator.textContent = secondsToTimeString(timeSeconds) + " / " + secondsToTimeString(song[song.length - 1][1]);
         nextLyricsRule.textContent = getNextSongText(song, currentIndex, timeSeconds);
+        myBar.style.width = (timeSeconds / song[song.length - 1][1]) * 100 + '%';
         if (timeSeconds === song[currentIndex][1]) {
             lyricsRuleHtml.textContent = song[currentIndex][0];
             currentIndex += 1;
@@ -154,7 +126,7 @@ function startSong(songName) {
                 return;
             }
         }
-        
+
         timeSeconds += waitTime / 1000;
     }, waitTime);
 }
