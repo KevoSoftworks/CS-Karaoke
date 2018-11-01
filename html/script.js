@@ -7,12 +7,14 @@ for (let i = 0; i < lis.length; i += 1) {
 		ui.start();
 	});
 };
+var scoreinterval;
 
 let ui = {
 	"start": function(){
 		console.log("Starting Game");
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");
+		document.getElementById("endscreen").classList.add("slideup");
 		document.getElementById("game").classList.remove("slideup");
 		game.init();
 	},
@@ -20,25 +22,37 @@ let ui = {
 	"main": function(){
 		document.getElementById("settings").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");
+		document.getElementById("endscreen").classList.add("slideup");
 		document.getElementById("main").classList.remove("slideup");
 	},
 
 	"settings": function(){
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");
+		document.getElementById("endscreen").classList.add("slideup");
 		document.getElementById("settings").classList.remove("slideup");
 	},
 
 	"songList": function() {
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("settings").classList.add("slideup");
+		document.getElementById("endscreen").classList.add("slideup");
 		document.getElementById("songList").classList.remove("slideup");
+	},
+	
+	"end" : function() {
+		document.getElementById("main").classList.add("slideup");
+		document.getElementById("settings").classList.add("slideup");
+		document.getElementById("songList").classList.add("slideup");
+		document.getElementById("endscreen").classList.remove("slideup");
+		clearInterval(songinterval);
 	}
 }
 
 let game = {
 	"score": 0,
 	"init": function(){
+		game.score = 0;
 		// set active song
 		document.getElementById("songIndicator").innerHTML = activeSong;
 
@@ -67,10 +81,10 @@ let game = {
 	"tick4": function(){
 		ws.send("Starting");
 		startSong(activeSong);
-		setInterval(function(){
+		scoreinterval = setInterval(function(){
 			let add = Math.round(Math.random() * 100);
 			game.score += add;
-			document.getElementById("gameWindow").innerHTML = `<span style='font-size: 24px'>Score: ${game.score}</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
+			document.getElementById("gameWindow").innerHTML = `<span style='font-size: 24px' id="currentScore" >Score: ${game.score}</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
 			document.getElementById("barInner").setAttribute("style", `width: ${add}%`);
 		}, 250);
 	}

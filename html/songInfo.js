@@ -9,6 +9,7 @@
     ]
 */
 
+
 songs = {
     "I Want It That Way - Backstreet Boys": [
         ["Yeah-eh-heah", 0],
@@ -98,9 +99,11 @@ function getNextSongText(song, currentIndex, currentTime) {
 
     return "";
 }
+ var activesong;
 
 // Start a song with a particular songName
 function startSong(songName) {
+	activesong = songName;
     let song = songs[songName];
     let waitTime = 1000;
     let timeSeconds = 0;
@@ -118,10 +121,18 @@ function startSong(songName) {
             lyricsRuleHtml.textContent = song[currentIndex][0];
             currentIndex += 1;
             if (currentIndex === song.length) {
-                setInterval(function() {
-                    lyricsRule.textContent = "Song has ended.";
-                }, 3000);
-
+            	var score = document.getElementById("currentScore").innerHTML;
+            	console.log(score);
+            	ws.send("Ending");
+                //go to the endscreen
+                document.getElementById("main").classList.add("slideup");
+            	document.getElementById("settings").classList.add("slideup");
+            	document.getElementById("songList").classList.add("slideup");
+            	document.getElementById("game").classList.add("slideup");
+            	document.getElementById("endscreen").classList.remove("slideup");
+            	console.log(activesong);
+            	document.getElementById("songIndicatorDone").innerHTML = activesong;
+            	document.getElementById("score").innerHTML = score;
                 clearTimeout(timeInterval);
                 return;
             }
