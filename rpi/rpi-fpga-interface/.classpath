@@ -16,5 +16,7 @@
 	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension.jar"/>
 	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension-javadoc.jar"/>
 	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension-sources.jar"/>
+	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/jetty-all-9.0.4.v20130625.jar"/>
+	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/javax.servlet-api-4.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
