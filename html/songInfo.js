@@ -91,9 +91,10 @@ function getNextSongText(song, currentIndex, currentTime) {
     console.log("currentTime: " + currentTime);
     console.log("song time: " + song[currentIndex][1]);
 
-    //if (Math.abs(currentTime - song[currentIndex][1]) <= 2 && Math.abs(currentTime - song[currentIndex][1]) != 0) {
+    // if (Math.abs(currentTime - song[currentIndex][1]) <= 2 && Math.abs(currentTime - song[currentIndex][1]) != 0) {
+    if (currentTime - song[currentIndex][1] !== 0) {    
         return song[currentIndex][0];
-    //}
+    }
 
     return "";
 }
