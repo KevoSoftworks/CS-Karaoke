@@ -12,7 +12,9 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 @WebSocket
 public class MyWebSocketHandler {
-	HashMap<String, String> songtofile = new HashMap<String, String>();
+	public static HashMap<String, String> songtofile = new HashMap<String, String>();
+	public static String activeSong = "";
+	private Session wsSession;
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
@@ -28,10 +30,12 @@ public class MyWebSocketHandler {
     public void onConnect(Session session) {
         System.out.println("Connect: " + session.getRemoteAddress().getAddress());
         try {
+        	wsSession = session;
             session.getRemote().sendString("Hello Webbrowser");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
         //put all the known songs into the hashmap with their filenames
         songtofile.put("I Want It That Way - Backstreet Boys", "i-want-it-that-way");
         songtofile.put("Never Gonna Give You Up - Rick Astley", "never-gonna-give-you-up");
@@ -42,15 +46,46 @@ public class MyWebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(String message) {
         System.out.println("Message: " + message);
-        if(message.charAt(0) == 0) {
-        	//get the filename of the song the user selected
-        	String songfile = songtofile.get(message.substring(1, message.length()-1));
-            System.out.println(songfile);
-            Main main = new Main(songfile);
-            main.run();
-        } else if(message.equals("Starting")) {
-        	//the game is starting so the karaoke game should start
+
+        if (message.charAt(0) == '0') {
+        	// Update the active song.
+        	System.out.println("Song update");
+        	activeSong = songtofile.get(message.substring(1, message.length()-1));
+        	new Main(activeSong).run();
+        } else if (message.equals("Starting")) {
+        	// Game has started
+        	System.out.println("Game has started");
+	
+        	// send random numbers for score.
+            new Thread()
+            {
+                public void run() {
+                    while (true) {
+                    	updateScore((int) (Math.random() * 100));
+                    	
+                    	try {
+    						Thread.sleep(1000);
+    					} catch (InterruptedException e) {
+    						// TODO Auto-generated catch block
+    						e.printStackTrace();
+    					}
+                    }
+                }
+            }.start();
         	
-        }    
+        } else if (message.equals("Ending")) {
+        	// Game has ended.
+        	System.out.println("Game has ended");
+        	activeSong = "";
+        }
+    }
+
+    // Updates the score for the client.
+    public void updateScore(int score) {
+    	try {
+			wsSession.getRemote().sendString("0" + String.valueOf(score));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 }

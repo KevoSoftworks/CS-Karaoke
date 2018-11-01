@@ -2,21 +2,21 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-core.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/junit.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-core-javadoc.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-core-sources.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-device.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-device-javadoc.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-device-sources.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-example.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-example-javadoc.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-example-sources.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension-javadoc.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension-sources.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/jetty-all-9.0.4.v20130625.jar"/>
-	<classpathentry kind="lib" path="/home/kevo/Documents/CS-Karaoke/rpi/pi4j/lib/javax.servlet-api-4.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/javax.servlet-api-4.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/jetty-all-9.0.4.v20130625.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/junit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-core-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-core-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-device.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-device-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-device-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-example.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-example-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-example-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nickw/Desktop/Technical Computer Science/Education related/Module 5/CS-Karaoke/rpi/pi4j/lib/pi4j-gpio-extension-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
