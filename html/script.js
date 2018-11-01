@@ -1,21 +1,3 @@
-var ws = new WebSocket("ws://127.0.0.1:8080/");
-    ws.onopen = function() {
-        console.log("Opened!");
-        ws.send("Hello Server");
-    };
-
-    ws.onmessage = function (evt) {
-        console.log("Message: " + evt.data);
-    };
-
-    ws.onclose = function() {
-        console.log("Closed!");
-    };
-
-    ws.onerror = function(err) {
-        console.log("Error: " + err);
-    };
-
 var lis = document.getElementsByTagName("li");
 var activeSong = lis[0].textContent;
 for (let i = 0; i < lis.length; i += 1) {
@@ -84,7 +66,6 @@ let game = {
 	},
 	"tick4": function(){
 		ws.send("Starting");
-		move();
 		startSong(activeSong);
 		setInterval(function(){
 			let add = Math.round(Math.random() * 100);
@@ -95,18 +76,4 @@ let game = {
 	}
 }
 
-function move(){
-  var helpgitiskut;
-  var elem = document.getElementById("myBar");
-  var width = 1;
-  var id= setInterval(frame, 1);
-  function frame(){
-      if(width >= 100){
-        clearInterval(id);
-      } else {
-        width = width + 1/250;
-        elem.style.width = width +'%';
-      }
-  }
-}
 

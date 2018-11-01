@@ -81,6 +81,20 @@ function secondsToTimeString(seconds) {
     return minutes + ":" + seconds;
 }
 
+function move(){
+    var elem = document.getElementById("myBar");
+    var width = 1;
+    var id= setInterval(frame, 1);
+    function frame(){
+        if(width >= 100){
+          clearInterval(id);
+        } else {
+          width = width + 1/250;
+          elem.style.width = width +'%';
+        }
+    }
+  }
+
 function getNextSongText(song, currentIndex, currentTime) {
     indexToCheck = currentIndex + 1;
 
@@ -99,8 +113,24 @@ function getNextSongText(song, currentIndex, currentTime) {
     return "";
 }
 
+
+function move(){
+    var elem = document.getElementById("myBar");
+    var width = 1;
+    var id= setInterval(frame, 1);
+    function frame(){
+        if(width >= 100){
+          clearInterval(id);
+        } else {
+          width = width + 1/250;
+          elem.style.width = width +'%';
+        }
+    }
+  }
+
 // Start a song with a particular songName
 function startSong(songName) {
+    move();
     let song = songs[songName];
     let waitTime = 1000;
     let timeSeconds = 0;
@@ -119,10 +149,12 @@ function startSong(songName) {
                 setInterval(function() {
                     lyricsRule.textContent = "Song has ended.";
                 }, 3000);
+
                 clearTimeout(timeInterval);
                 return;
             }
         }
+        
         timeSeconds += waitTime / 1000;
     }, waitTime);
 }
