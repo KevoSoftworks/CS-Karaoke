@@ -1,0 +1,79 @@
+package com.kevosoftworks.rpifpgaiface;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
+
+public class AudioHandler {
+	
+	TargetDataLine microphone;
+	SourceDataLine speakers;
+	
+	int bufferSize;
+	
+	public AudioHandler(int sampleRate, int bits, int channels, int bufferSize){
+		this.bufferSize = bufferSize;
+		
+		AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, bits, channels, 2, sampleRate, false);
+		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();		
+		// change the index in the mixinfos[] until it has the correct driver.
+		// Index 2 works for the pi.
+		Mixer mixer = AudioSystem.getMixer(mixInfos[2]);
+		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
+		
+		try {
+			microphone = (TargetDataLine) mixer.getLine(targetInfo);
+			microphone.open(format);
+			microphone.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
+		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
+		
+		try {
+			speakers = (SourceDataLine) mixer.getLine(sourceInfo);
+			speakers.open(format);
+			speakers.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public byte[] recordBuffer(){
+		int numBytesRead;
+		byte[] targetData = new byte[this.bufferSize];
+		
+		numBytesRead = microphone.read(targetData, 0, this.bufferSize);
+		if(numBytesRead < 0){} //do something
+		return targetData;
+	}
+	
+	public void playBuffer(byte[] buf){
+		speakers.write(buf, 0, buf.length);
+	}
+	
+	public byte[] mixBuffers(byte[] b1, byte[] b2){
+		byte[] ret = new byte[b1.length];
+		
+		for(int i = 0; i < b1.length; i += 2){
+			short b1_lsb = (short) (b1[i] & 0xFF);
+			short b1_msb = (short) (b1[i+1] & 0xFF);
+			short s1 = (short) (((b1_msb << 8) + b1_lsb)/2);
+			
+			short b2_lsb = (short) (b2[i] & 0xFF);
+			short b2_msb = (short) (b2[i+1] & 0xFF);
+			short s2 = (short) (((b2_msb << 8) + b2_lsb)/2);
+			
+			short iret = (short) (s2 + s2);
+			ret[i] = (byte)(iret & 0xFF);
+			ret[i+1] = (byte)((iret >> 8) & 0xFF);
+		}
+		
+		return ret;
+	}
+}
