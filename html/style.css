@@ -32,6 +32,18 @@ li:hover {
 	background-color: #38aecc;
 }
 
+.flexcontainer {
+	background-color: #38aecc;
+	display:flex;
+	flex-direction:column;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+.flexcontainer > h3 {
+	background-color: #38aecc;
+}
+
 .mainmenubtn{
 	font-size: 20px;
 }
