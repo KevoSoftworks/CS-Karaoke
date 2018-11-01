@@ -46,14 +46,16 @@ public class MyWebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(String message) {
         System.out.println("Message: " + message);
+
         if (message.charAt(0) == '0') {
         	// Update the active song.
         	System.out.println("Song update");
         	activeSong = songtofile.get(message.substring(1, message.length()-1));
+        	new Main(activeSong).run();
         } else if (message.equals("Starting")) {
         	// Game has started
         	System.out.println("Game has started");
-        	
+	
         	// send random numbers for score.
             new Thread()
             {
