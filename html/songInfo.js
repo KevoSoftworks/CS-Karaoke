@@ -66,6 +66,47 @@ songs = {
         ["I want it that way", 198],
         ["'Cause I want it that way", 203],
     ],
+    "Don't Stop Believin' - Journey": [
+        ["Just a small town girl", 16],
+        ["Livin' in a lonely world", 21],
+        ["She took the midnight train goin' anywhere", 25],
+        ["Just a city boy", 33],
+        ["Born and raised in south Detroit", 37],
+        ["He took the midnight train goin' anywhere", 41],
+        ["A singer in a smoky room", 66],
+        ["A smell of wine and cheap perfume", 69],
+        ["For a smile they can share the night", 73],
+        ["It goes on and on, and on, and on", 76],
+        ["Strangers waiting", 81],
+        ["Up and down the boulevard", 86],
+        ["Their shadows searching in the night", 89],
+        ["Streetlights, people", 97],
+        ["Living just to find emotion", 103],
+        ["Hiding somewhere in the night", 105],
+        ["Working hard to get my fill", 121],
+        ["Everybody wants a thrill", 126],
+        ["Payin' anything to roll the dice", 129],
+        ["Just one more time", 132],
+        ["Some will win, some will lose", 137],
+        ["Some were born to sing the blues", 142],
+        ["Oh, the movie never ends", 145],
+        ["It goes on and on, and on, and on", 147],
+        ["Strangers waiting", 153],
+        ["Up and down the boulevard", 157],
+        ["Their shadows searching in the night", 160],
+        ["Streetlights, people", 169],
+        ["Living just to find emotion", 173],
+        ["Hiding somewhere in the night", 177],
+        ["Don't stop believin'", 200],
+        ["Hold on to the feelin'", 205],
+        ["Streetlights, people", 208],
+        ["Don't stop believin'", 215],
+        ["Hold on", 220],
+        ["Streetlights, people", 223],
+        ["Don't stop believin'", 233],
+        ["Hold on to the feelin'", 236],
+        ["Streetlights, people", 240],
+    ]        
 }
 
 // Converts seconds to a time string. For example: 84 returns 01:24.
@@ -87,9 +128,6 @@ function getNextSongText(song, currentIndex, currentTime) {
     if (indexToCheck == song.length) {
         return "";
     }
-
-    console.log("currentTime: " + currentTime);
-    console.log("song time: " + song[currentIndex][1]);
 
     // if (Math.abs(currentTime - song[currentIndex][1]) <= 2 && Math.abs(currentTime - song[currentIndex][1]) != 0) {
     if (currentTime - song[currentIndex][1] !== 0) {    
@@ -122,6 +160,7 @@ function startSong(songName) {
                     lyricsRule.textContent = "Song has ended.";
                 }, 3000);
 
+                ws.send("Ending");
                 clearTimeout(timeInterval);
                 return;
             }

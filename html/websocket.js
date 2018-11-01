@@ -1,3 +1,4 @@
+
 var ws = new WebSocket("ws://127.0.0.1:8080/");
     ws.onopen = function() {
         console.log("Opened!");
@@ -6,6 +7,13 @@ var ws = new WebSocket("ws://127.0.0.1:8080/");
 
     ws.onmessage = function (evt) {
         console.log("Message: " + evt.data);
+        let gamescore = document.getElementById("gameScore");
+        if (gamescore) {
+            gamescore.textContent = evt.data;
+            document.getElementById("barInner").setAttribute("style", `width: ${evt.data}%`);
+        } else {
+            console.log("gameScore is not defined because of hacky code");
+        }
     };
 
     ws.onclose = function() {
