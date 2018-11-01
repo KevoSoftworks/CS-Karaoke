@@ -46,6 +46,8 @@ public class MyWebSocketHandler {
         	//get the filename of the song the user selected
         	String songfile = songtofile.get(message.substring(1, message.length()-1));
             System.out.println(songfile);
+            Main main = new Main(songfile);
+            main.run();
         } else if(message.equals("Starting")) {
         	//the game is starting so the karaoke game should start
         	
