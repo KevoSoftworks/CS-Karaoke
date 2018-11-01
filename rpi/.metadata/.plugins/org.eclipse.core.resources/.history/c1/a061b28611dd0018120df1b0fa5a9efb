@@ -1,0 +1,125 @@
+package com.kevosoftworks.rpifpgaiface;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Song {
+	
+	public static final String DEFAULT = "audio.wav";
+	
+	String name;
+	SPIInterface spi;
+	AudioHandler audio;
+	boolean isPlaying = false;
+	
+	ArrayList<byte[]> original;
+	ArrayList<Integer> originZeroCross;
+	ArrayList<byte[]> record;
+	ArrayList<Integer> recordZeroCross;
+	ArrayList<byte[]> playback;
+	
+	public Song(SPIInterface spi){
+		this(spi, DEFAULT);
+	}
+	
+	public Song(SPIInterface spi, String name){
+		this.spi = spi;
+		this.name = name;
+		this.original = new ArrayList<byte[]>();
+		this.originZeroCross = new ArrayList<Integer>();
+		this.record = new ArrayList<byte[]>();
+		this.recordZeroCross = new ArrayList<Integer>();
+		this.playback = new ArrayList<byte[]>();
+		
+		this.audio = new AudioHandler(44100, 16, 1, 4000);
+		
+		try {
+			this.loadSong();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadSong() throws IOException{	
+		this.convertPlayback();
+		this.convertOriginal();
+		this.sendOriginal();
+	}
+	
+	private void convertPlayback() throws IOException{
+		byte[] wave = new byte[4000];
+		BufferedInputStream in = new BufferedInputStream(Song.class.getResourceAsStream("/playback/" + this.name));
+
+		int bytesRead = 1;
+		while(bytesRead > 0){
+			bytesRead = in.read(wave);
+			playback.add(wave.clone());
+		}
+		
+		System.out.println("Playback: " + playback.size());
+	}
+	
+	private void convertOriginal() throws IOException{
+		byte[] wave = new byte[4000];
+		BufferedInputStream in = new BufferedInputStream(Song.class.getResourceAsStream("/vocals/" + this.name));
+
+		int bytesRead = 1;
+		while(bytesRead > 0){
+			bytesRead = in.read(wave);
+			original.add(wave.clone());
+		}
+		System.out.println("Original: " + original.size());
+	}
+	
+	private void sendOriginal(){
+		boolean firstByte = false;
+		for(int i = 0; i < original.size(); i++){
+			Packet p = new Packet(original.get(i).clone(), false, false, i, 0);
+			byte[] result = spi.readByte(p.getPacket());
+			
+			if(firstByte){
+				//long key = this.byteArrToInt(result, 2);
+				int cross = this.byteArrToInt(result, 0);
+				this.originZeroCross.add(cross);
+			}
+			firstByte = true;
+		}
+	}
+	
+	public void startRecord(){
+		System.out.println("Play started!");
+		isPlaying = true;
+		int frame = 0;
+		while(isPlaying){
+			if(frame >= playback.size()){
+				isPlaying = false;
+				continue;
+			}
+			
+			byte[] buf = audio.recordBuffer();
+			this.record.add(buf.clone());
+
+			audio.playBuffer(playback.get(frame));
+			
+			Packet p = new Packet(buf, false, false, frame, byteArrToInt(this.original.get(frame), 0));
+			byte[] res = spi.readByte(p.getPacket());
+			
+			if(frame > 0){
+				//long key = this.byteArrToInt(res, 2);
+				int cross = this.byteArrToInt(res, 0);
+				this.recordZeroCross.add(cross);
+			}
+			
+			if(frame > 1) System.out.println("Song: " + originZeroCross.get(frame-1) + "; You: " + recordZeroCross.get(frame-1));
+			
+			frame++;
+		}
+	}
+	
+	private int byteArrToInt(byte[] in, int offset){
+		return (in[offset] << 8 | (in[offset + 1] & 0xFF));
+	}
+
+}
