@@ -24,6 +24,14 @@ li:hover {
     padding-right: 9px;
 }
 
+.nextlyric {
+	font-size: 12px;
+}
+
+.lyrics {
+	background-color: #38aecc;
+}
+
 .mainmenubtn{
 	font-size: 20px;
 }
