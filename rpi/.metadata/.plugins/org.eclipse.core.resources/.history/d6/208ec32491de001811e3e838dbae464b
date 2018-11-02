@@ -130,11 +130,7 @@ public class Song {
 	}
 	
 	private int byteArrToInt(byte[] in, int offset){
-		return (((in[offset] & 0xFF) << 8) | ((in[offset + 1] & 0xFF)));
-	}
-	
-	private int byteArrToIntRevEndian(byte[] in, int offset){
-		return (((in[offset] & 0xFF)) | ((in[offset + 1] & 0xFF) << 8));
+		return ((in[offset] & 0xFF) | ((in[offset + 1] & 0xFF) << 8));
 	}
 	
 	public int getCurrentScore(){
