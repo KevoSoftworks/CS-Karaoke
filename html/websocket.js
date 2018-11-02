@@ -1,5 +1,5 @@
 
-var ws = new WebSocket("ws://127.0.0.1:8080/");
+var ws = new WebSocket("ws://10.42.0.100:8080/");
     ws.onopen = function() {
         console.log("Opened!");
         ws.send("Hello Server");
