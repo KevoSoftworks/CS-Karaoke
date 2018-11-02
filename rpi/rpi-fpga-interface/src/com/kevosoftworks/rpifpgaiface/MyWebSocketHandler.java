@@ -73,6 +73,15 @@ public class MyWebSocketHandler {
         	// send random numbers for score.
             new Thread()
             {
+            	//Just added to test the score, can be removed untill line 82
+            	public void run() {
+                   	try {
+						wsSession.getRemote().sendString("Thread is created");
+						System.out.println("Thread is createdd");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                     while (true) {
                     	updateScore((int) (Math.random() * 100));
                     	
