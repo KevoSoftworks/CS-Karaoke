@@ -9,7 +9,6 @@
     ]
 */
 
-
 songs = {
     "I Want It That Way - Backstreet Boys": [
         ["Yeah-eh-heah", 0],
@@ -130,17 +129,20 @@ function getNextSongText(song, currentIndex, currentTime) {
         return "";
     }
 
-    // if (Math.abs(currentTime - song[currentIndex][1]) <= 2 && Math.abs(currentTime - song[currentIndex][1]) != 0) {
+    // If the current time is not equal to the next song text time then display the next song text.
+    // otherwise you have that the next songtext is the current song text for 1 sec.
     if (currentTime - song[currentIndex][1] !== 0) {    
         return song[currentIndex][0];
     }
 
     return "";
 }
- var activesong;
+
+var activesong;
 
 // Start a song with a particular songName
 function startSong(songName) {
+    // initialize variables.
 	activesong = songName;
     let song = songs[songName];
     let waitTime = 1000;
@@ -151,13 +153,21 @@ function startSong(songName) {
     let timeIndicator = document.getElementById("timeIndicator");
     let myBar = document.getElementById("myBar");
 
+    // every second.
     var timeInterval = setInterval(function() {
+        // update timeIndicator and next lyrics rule
         timeIndicator.textContent = secondsToTimeString(timeSeconds) + " / " + secondsToTimeString(song[song.length - 1][1]);
         nextLyricsRule.textContent = getNextSongText(song, currentIndex, timeSeconds);
+        // update progress bar.
         myBar.style.width = (timeSeconds / song[song.length - 1][1]) * 100 + '%';
+
+        // if the current time is the same as the time when a new song line should be displayed
         if (timeSeconds === song[currentIndex][1]) {
+            // update the song line.
             lyricsRuleHtml.textContent = song[currentIndex][0];
             currentIndex += 1;
+
+            // if the song has ended.
             if (currentIndex === song.length) {
             	var score = document.getElementById("currentScore").innerHTML;
             	console.log(score);
