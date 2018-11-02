@@ -50,7 +50,6 @@ let ui = {
 }
 
 let game = {
-	"score": 0,
 	"init": function(){
 		game.score = 0;
 		// set active song
@@ -82,9 +81,8 @@ let game = {
 		ws.send("Starting");
 		startSong(activeSong);
 		
-		let add = 50;
-		document.getElementById("gameWindow").innerHTML = `<span id='gameScore' style='font-size: 24px'>Score: ${game.score}</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
-		document.getElementById("barInner").setAttribute("style", `width: ${add}%`);
+		document.getElementById("gameWindow").innerHTML = `<span id='gameScore' style='font-size: 24px'>Score: 0</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
+		document.getElementById("barInner").setAttribute("style", `width: 0%`);
 	}
 }
 

@@ -51,7 +51,7 @@ public class MyWebSocketHandler {
         	// Update the active song.
         	System.out.println("Song update");
         	activeSong = songtofile.get(message.substring(1, message.length()-1));
-        	new Main(activeSong).run();
+        	// new Main(activeSong).run();
         } else if (message.equals("Starting")) {
         	// Game has started
         	System.out.println("Game has started");
