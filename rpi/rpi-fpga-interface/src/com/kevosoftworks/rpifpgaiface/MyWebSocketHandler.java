@@ -52,7 +52,8 @@ public class MyWebSocketHandler {
         if (message.charAt(0) == '0') {
         	// Update the active song.
         	System.out.println("Song update");
-        	activeSong = songtofile.get(message.substring(1, message.length()-1));
+        	activeSong = songtofile.get(message.substring(1, message.length()));
+        	System.out.println(activeSong);
         	s = new Song(Main.si, activeSong);
         	while(!s.isReady()){
         		//Do Nothing
