@@ -2,8 +2,10 @@ var lis = document.getElementsByTagName("li");
 var activeSong = lis[0].textContent;
 for (let i = 0; i < lis.length; i += 1) {
 	lis[i].addEventListener("click", function() {
+		//send the active song with a 0 at the start
 		ws.send("0" + lis[i].textContent);
 		activeSong = lis[i].textContent;
+		//start the game
 		ui.start();
 	});
 };
@@ -11,7 +13,7 @@ var scoreinterval;
 
 let ui = {
 	"start": function(){
-		console.log("Starting Game");
+		//hide all other pages, only show the game page
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");
 		document.getElementById("endscreen").classList.add("slideup");
@@ -20,6 +22,7 @@ let ui = {
 	},
 
 	"main": function(){
+		//hide all oteh rpages, only show the main menu page
 		document.getElementById("settings").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");
 		document.getElementById("endscreen").classList.add("slideup");
@@ -27,6 +30,7 @@ let ui = {
 	},
 
 	"settings": function(){
+		//hide all other pages, only show the settings page
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");
 		document.getElementById("endscreen").classList.add("slideup");
@@ -34,6 +38,7 @@ let ui = {
 	},
 
 	"songList": function() {
+		//hide all other pages, only show the songlist page
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("settings").classList.add("slideup");
 		document.getElementById("endscreen").classList.add("slideup");
@@ -41,6 +46,7 @@ let ui = {
 	},
 	
 	"end" : function() {
+		//hide all other pages, only show the endscreen
 		document.getElementById("main").classList.add("slideup");
 		document.getElementById("settings").classList.add("slideup");
 		document.getElementById("songList").classList.add("slideup");

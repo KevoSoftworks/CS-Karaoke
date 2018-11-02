@@ -168,8 +168,9 @@ function startSong(songName) {
             	document.getElementById("songList").classList.add("slideup");
             	document.getElementById("game").classList.add("slideup");
             	document.getElementById("endscreen").classList.remove("slideup");
-            	console.log(activesong);
+            	//show the active song at the top of the page
             	document.getElementById("songIndicatorDone").innerHTML = activesong;
+            	//show the final score
             	document.getElementById("score").innerHTML = score;
                 clearTimeout(timeInterval);
                 return;
