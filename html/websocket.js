@@ -14,7 +14,17 @@ var ws = new WebSocket("ws://10.42.0.100:8080/");
         console.log("Message: " + evt.data);
         if (evt.data=="SongReady"){
           game.tick4();
-        }
+        } 
+        let gamescore = document.getElementById("gameScore");
+              if(evt.data.length>10 && gamescore!=null){
+               // if(evt.data.substring(0, 13) == "Score so far: "){
+           console.log("if-loop-of-score has been called");
+                  gamescore.innerHTML = evt.data.substring(14, evt.data.length);
+                  document.getElementById("barInner").setAttribute("style", `width: ${evt.data}%`);
+               // }
+                
+              }
+        
         /*// Gamescore is added later to the DOM by javascript. So check if it exists.
         let gamescore = document.getElementById("gameScore");
         if (gamescore) {

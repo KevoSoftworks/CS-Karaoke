@@ -66,13 +66,22 @@ public class MyWebSocketHandler {
 			}
         } else if (message.equals("Starting")) {
         	// Game has started
-        	s.startRecord();
+        	// Start recording should be here V
+        	
         	System.out.println("Game has started");
 	
         	// send random numbers for score.
             new Thread()
             {
-                public void run() {
+            	//Just added to test the score, can be removed untill line 82
+            	public void run() {
+                   	try {
+						wsSession.getRemote().sendString("Thread is created");
+						System.out.println("Thread is createdd");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                     while (true) {
                     	updateScore((int) (Math.random() * 100));
                     	
@@ -85,7 +94,10 @@ public class MyWebSocketHandler {
                     }
                 }
             }.start();
-        	
+            
+            System.out.println("Start recording song");
+        	s.startRecord();
+            
         } else if (message.equals("Ending")) {
         	// Game has ended now.
         	System.out.println("Game has ended");
@@ -96,7 +108,7 @@ public class MyWebSocketHandler {
     // Updates the score for the client.
     public void updateScore(int score) {
     	try {
-			wsSession.getRemote().sendString("0" + String.valueOf(score));
+			wsSession.getRemote().sendString("Score so far: "+String.valueOf(score));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
