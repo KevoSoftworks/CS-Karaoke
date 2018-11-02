@@ -74,7 +74,7 @@ public class MyWebSocketHandler {
             }.start();
         	
         } else if (message.equals("Ending")) {
-        	// Game has ended.
+        	// Game has ended now.
         	System.out.println("Game has ended");
         	activeSong = "";
         }

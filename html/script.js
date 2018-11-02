@@ -81,12 +81,6 @@ let game = {
 	"tick4": function(){
 		ws.send("Starting");
 		startSong(activeSong);
-		scoreinterval = setInterval(function(){
-			let add = Math.round(Math.random() * 100);
-			game.score += add;
-			document.getElementById("gameWindow").innerHTML = `<span style='font-size: 24px' id="currentScore" >Score: ${game.score}</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
-			document.getElementById("barInner").setAttribute("style", `width: ${add}%`);
-		}, 250);
 		
 		let add = 50;
 		document.getElementById("gameWindow").innerHTML = `<span id='gameScore' style='font-size: 24px'>Score: ${game.score}</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
