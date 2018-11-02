@@ -106,7 +106,11 @@ songs = {
         ["Don't stop believin'", 233],
         ["Hold on to the feelin'", 236],
         ["Streetlights, people", 240],
-    ]        
+    ],
+    "test": [
+        ["test1'", 2],
+        ["test2", 6],
+    ]     
 }
 
 // Converts seconds to a time string. For example: 84 returns 01:24.
@@ -125,7 +129,7 @@ function secondsToTimeString(seconds) {
 function getNextSongText(song, currentIndex, currentTime) {
     indexToCheck = currentIndex + 1;
 
-    if (indexToCheck == song.length) {
+    if (indexToCheck === song.length) {
         return "";
     }
 
@@ -158,6 +162,7 @@ function startSong(songName) {
         // update timeIndicator and next lyrics rule
         timeIndicator.textContent = secondsToTimeString(timeSeconds) + " / " + secondsToTimeString(song[song.length - 1][1]);
         nextLyricsRule.textContent = getNextSongText(song, currentIndex, timeSeconds);
+        
         // update progress bar.
         myBar.style.width = (timeSeconds / song[song.length - 1][1]) * 100 + '%';
 
@@ -169,7 +174,7 @@ function startSong(songName) {
 
             // if the song has ended.
             if (currentIndex === song.length) {
-            	var score = document.getElementById("currentScore").innerHTML;
+            	var score = document.getElementById("gameScore").innerHTML;
             	console.log(score);
             	ws.send("Ending");
                 //go to the endscreen
@@ -182,7 +187,7 @@ function startSong(songName) {
             	document.getElementById("songIndicatorDone").innerHTML = activesong;
             	//show the final score
             	document.getElementById("score").innerHTML = score;
-                clearTimeout(timeInterval);
+                clearInterval(timeInterval);
                 return;
             }
         }
