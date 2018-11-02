@@ -12,8 +12,10 @@ var ws = new WebSocket("ws://10.42.0.100:8080/");
     // On a message received.
     ws.onmessage = function (evt) {
         console.log("Message: " + evt.data);
-
-        // Gamescore is added later to the DOM by javascript. So check if it exists.
+        if (evt.data=="SongReady"){
+          game.tick4();
+        }
+        /*// Gamescore is added later to the DOM by javascript. So check if it exists.
         let gamescore = document.getElementById("gameScore");
         if (gamescore) {
             gamescore.textContent = evt.data;
@@ -21,9 +23,7 @@ var ws = new WebSocket("ws://10.42.0.100:8080/");
         } else {
             console.log("gameScore has not been added to the DOM yet.");
         }
-        if (evt.data=="SongReady"){
-          game.tick4();
-        }
+        */
     };
 
     ws.onclose = function() {

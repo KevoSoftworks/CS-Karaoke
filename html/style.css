@@ -159,6 +159,10 @@ h3{
 	background-color: #9b0000;
 }
 
+#barInner{
+	transition: 2s linear;
+}
+
 #myProgress{
 	width:100%;
 	background-color: grey;
@@ -170,4 +174,5 @@ h3{
 	height: 15px;
 	background-color: green;
 	border-radius: 25px;
+	transition: 5s linear;
 }
