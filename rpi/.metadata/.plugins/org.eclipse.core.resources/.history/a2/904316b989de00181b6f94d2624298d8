@@ -13,7 +13,6 @@ public class Song {
 	SPIInterface spi;
 	AudioHandler audio;
 	boolean isPlaying = false;
-	boolean ready = false;
 	float score = 0;
 	
 	ArrayList<byte[]> original;
@@ -47,11 +46,10 @@ public class Song {
 		}
 	}
 	
-	private void loadSong() throws IOException{
+	private void loadSong() throws IOException{	
 		this.convertPlayback();
 		this.convertOriginal();
 		this.sendOriginal();
-		this.ready = true;
 	}
 	
 	private void convertPlayback() throws IOException{
@@ -135,10 +133,6 @@ public class Song {
 	
 	public int getCurrentScore(){
 		return (int)this.score;
-	}
-	
-	public boolean isReady(){
-		return this.ready;
 	}
 
 }

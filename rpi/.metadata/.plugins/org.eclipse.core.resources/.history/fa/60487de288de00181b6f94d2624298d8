@@ -15,8 +15,6 @@ public class MyWebSocketHandler {
 	public static HashMap<String, String> songtofile = new HashMap<String, String>();
 	public static String activeSong = "";
 	private Session wsSession;
-	
-	Song s;
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
@@ -53,14 +51,9 @@ public class MyWebSocketHandler {
         	// Update the active song.
         	System.out.println("Song update");
         	activeSong = songtofile.get(message.substring(1, message.length()-1));
-        	s = new Song(Main.si, activeSong);
-        	while(!s.ready()){
-        		//Do Nothing
-        	}
-        	wsSession.getRemote().sendMessage("SongReady");
+        	new Main(activeSong).run();
         } else if (message.equals("Starting")) {
         	// Game has started
-        	s.startRecord();
         	System.out.println("Game has started");
 	
         	// send random numbers for score.

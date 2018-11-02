@@ -4,22 +4,34 @@ public class Main implements Runnable{
 	
 	static boolean running = false;
 	Thread thread;	
-	public static SPIInterface si;
+	SPIInterface si;
+	Song s;
 	ServerStart serverStart;
+	
+	public Main(String file){
+		si = new SPIInterface();
+		s = new Song(si, file);
+		serverStart = new ServerStart();
+	}
 	
 	public Main(){
 		si = new SPIInterface();
+		s = new Song(si);
 		serverStart = new ServerStart();
 		serverStart.start();
 	}
 
 	@Override
 	public void run() {
-		
+		s.startRecord();
 	}
 	
 	public static void main(String[] args){
-		new Main().start();
+		if(args.length == 1){
+			new Main(args[0]).start();
+		} else {
+			new Main().start();
+		}
 	}
 	
 	public synchronized void start(){
