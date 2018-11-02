@@ -39,10 +39,10 @@ public class MyWebSocketHandler {
         }
         
         //put all the known songs into the hashmap with their filenames
-        songtofile.put("I Want It That Way - Backstreet Boys", "i-want-it-that-way");
-        songtofile.put("Never Gonna Give You Up - Rick Astley", "never-gonna-give-you-up");
-        songtofile.put("Don't Stop Believin' - Journey", "dont-stop-believin");
-        songtofile.put("Wonderwall - Oasis", "wonderwall");
+        songtofile.put("I Want It That Way - Backstreet Boys", "i-want-it-that-way.wav");
+        songtofile.put("Never Gonna Give You Up - Rick Astley", "never-gonna-give-you-up.wav");
+        songtofile.put("Don't Stop Believin' - Journey", "dont-stop-believin.wav");
+        songtofile.put("Wonderwall - Oasis", "wonderwall.wav");
     }
 
     @OnWebSocketMessage
@@ -54,10 +54,15 @@ public class MyWebSocketHandler {
         	System.out.println("Song update");
         	activeSong = songtofile.get(message.substring(1, message.length()-1));
         	s = new Song(Main.si, activeSong);
-        	while(!s.ready()){
+        	while(!s.isReady()){
         		//Do Nothing
         	}
-        	wsSession.getRemote().sendMessage("SongReady");
+        	try {
+				wsSession.getRemote().sendString("SongReady");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         } else if (message.equals("Starting")) {
         	// Game has started
         	s.startRecord();

@@ -80,10 +80,11 @@ let game = {
 	"tick3": function(){
 		setTimeout(function(){
 				document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 1...</span>";
-				game.tick4();
+				//game.tick4();
 		},1000);
 	},
 	"tick4": function(){
+	  
 		ws.send("Starting");
 		startSong(activeSong);
 		

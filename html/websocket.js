@@ -21,6 +21,9 @@ var ws = new WebSocket("ws://10.42.0.100:8080/");
         } else {
             console.log("gameScore has not been added to the DOM yet.");
         }
+        if (evt.data=="SongReady"){
+          game.tick4();
+        }
     };
 
     ws.onclose = function() {
