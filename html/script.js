@@ -3,7 +3,7 @@ var activeSong = lis[0].textContent;
 for (let i = 0; i < lis.length; i += 1) {
 	lis[i].addEventListener("click", function() {
 		//send the active song with a 0 at the start
-		ws.send("0" + lis[i].textContent);
+		new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.SONG_LOAD, PacketDataType.TEXT, lis[i].textContent).send();
 		activeSong = lis[i].textContent;
 		//start the game
 		ui.start();
@@ -18,7 +18,9 @@ let ui = {
 		document.getElementById("songList").classList.add("slideup");
 		document.getElementById("endscreen").classList.add("slideup");
 		document.getElementById("game").classList.remove("slideup");
-		game.init();
+		/*
+			TODO: Show a loading page
+		*/
 	},
 
 	"main": function(){
@@ -80,12 +82,12 @@ let game = {
 	"tick3": function(){
 		setTimeout(function(){
 				document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 1...</span>";
-				//game.tick4();
+				game.tick4();
 		},1000);
 	},
 	"tick4": function(){
 	  
-		ws.send("Starting");
+		new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.SONG_START).send();
 		startSong(activeSong);
 		
 		document.getElementById("gameWindow").innerHTML = `<span id='gameScore' style='font-size: 24px'>Score: 0</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
