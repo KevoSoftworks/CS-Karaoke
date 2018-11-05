@@ -17,7 +17,8 @@ ENTITY autotune IS
 	display6 : OUT STD_LOGIC_VECTOR(6 DOWNTO 0);
 	switch9 : IN STD_LOGIC;													--switches used for sensitivity in measurements of zero crossings
 	switch8 : IN STD_LOGIC;
-	switch1 : IN STD_LOGIC;
+	switch2 : IN STD_LOGIC;													--used for turning autotune off or on on the FPGA
+	switch1 : IN STD_LOGIC;													--used to set sensitivity of autotune on FPGA
 	switch0 : IN STD_LOGIC);
 END ENTITY autotune;
 
@@ -121,16 +122,18 @@ PROCESS(reset, SCLK, switch9, switch8, switch1, switch0)
 				c := 0; 												--reset c
 				RE := '0';												--make read enable low
 				WE := '0';												--make write enable low
-				IF Kees <= 100+max_autotune AND Kees >= 100-max_autotune AND previous_zeros > 0 AND previous_zeros_original > 0 THEN	--set the new value of Kees based on the old values of previos zeros and previous zeros original
-					IF 100*previous_zeros_original/previous_zeros > (100+sensitivity)*Kees/100 THEN		--maximum change in Kees upwards
-						Kees := (100+sensitivity)*Kees/100;
-					ELSIF 100*previous_zeros_original/previous_zeros < (100-sensitivity)*Kees/100 THEN	--and maximum change in Kees down
-						Kees := (100-sensitivity)*Kees/100;
-					ELSE Kees := 100*previous_zeros_original/previous_zeros;				--if Kees changes withing that range, this new value will be assigned to Kees
-					END IF;	
-				ELSIF Kees < 100-max_autotune THEN Kees := 100-max_autotune;								--absolute minimum of Kees
-				ELSIF Kees > 100+max_autotune THEN Kees := 100+max_autotune;								--absolute maximum of Kees
-				END IF;
+				IF switch2 = '1' THEN										--only autotune if switch2 is set to 1
+					IF Kees <= 100+max_autotune AND Kees >= 100-max_autotune AND previous_zeros > 0 AND previous_zeros_original > 0 THEN	--set the new value of Kees based on the old values of previous zeros and previous zeros original
+						IF 100*previous_zeros_original/previous_zeros > (100+sensitivity)*Kees/100 THEN		--maximum change in Kees upwards
+							Kees := (100+sensitivity)*Kees/100;
+						ELSIF 100*previous_zeros_original/previous_zeros < (100-sensitivity)*Kees/100 THEN	--and maximum change in Kees down
+							Kees := (100-sensitivity)*Kees/100;
+						ELSE Kees := 100*previous_zeros_original/previous_zeros;				--if Kees changes withing that range, this new value will be assigned to Kees
+						END IF;	
+					ELSIF Kees < 100-max_autotune THEN Kees := 100-max_autotune;				--absolute minimum of Kees
+					ELSIF Kees > 100+max_autotune THEN Kees := 100+max_autotune;				--absolute maximum of Kees
+					END IF;
+				ELSE Kees := 100; END IF;
 				previous_zeros_original := zeros_original;							--store the current value of zeros_original in previous_zeros_original which will be used for autotuning
 				stdpzo := STD_LOGIC_VECTOR(TO_UNSIGNED(previous_zeros_original, 16));				--vector form of previous_zeros_original
 				IF write_high = '0' THEN 									--select the other part of RAM
