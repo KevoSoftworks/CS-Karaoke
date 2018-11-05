@@ -75,11 +75,7 @@ public class WSHandler {
     					);
     				break;
     			case SONG_START:
-    				new Thread(new Runnable(){
-    					public void run(){
-    						s.startRecord();
-    					}
-    				}).start();
+    				s.startRecord();
     				//Maybe send something back to confirm.
     				break;
     			case SONG_BREAK:

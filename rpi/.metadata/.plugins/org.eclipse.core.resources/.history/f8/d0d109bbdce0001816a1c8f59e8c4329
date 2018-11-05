@@ -128,9 +128,7 @@ public class Song {
 				//long key = this.byteArrToInt(res, 2);
 				int cross = this.byteArrToInt(res, 0);
 				this.recordZeroCross.add(cross);
-				float zc = (float)this.originZeroCross.get(frame);
-				float tmpScore = 0;
-				if(zc > 0) tmpScore = (float)cross / zc;
+				float tmpScore = (float)cross / (float)this.originZeroCross.get(frame);
 				if(tmpScore > 1f) tmpScore = 1f - (tmpScore - 1f);
 				if(tmpScore < 0f) tmpScore = 0f;
 				this.score += tmpScore;

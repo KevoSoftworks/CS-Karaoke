@@ -4,7 +4,7 @@ import com.kevosoftworks.rpifpgaiface.websocket.WSServer;
 
 public class Main implements Runnable{
 	
-	public final static boolean ISPI = true;
+	public final static boolean ISPI = false;
 	
 	static boolean running = false;
 	Thread thread;	

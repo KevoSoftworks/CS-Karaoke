@@ -79,9 +79,4 @@ public class AudioHandler {
 		
 		return ret;
 	}
-	
-	public void close(){
-		microphone.close();
-		speakers.close();
-	}
 }

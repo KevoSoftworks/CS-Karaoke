@@ -1,8 +1,8 @@
 var ws = {
 	port: 8080,
-	ip: "127.0.0.1",
+	ip: "10.42.0.100",
 	protocol: "ws",
-	sock: new WebSocket("ws://127.0.0.1:8080"),
+	sock: new WebSocket("ws://10.42.0.100:8080"),
 	tries: 0,
 	ready: false,
 	func: {
@@ -12,7 +12,7 @@ var ws = {
 					game.init();
 					break;
 				case PacketMsgType.SCORE:
-					document.getElementById("gameScore").innerHTML = ws.getDataInProperFormat(pin);
+					document.getElementById("gameScore").innerHTML = ws.func.getDataInProperFormat(pin);
 					break;
 				default:
 					//Ignore all other stuff

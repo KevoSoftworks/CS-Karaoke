@@ -105,15 +105,15 @@ public class Song {
 		isPlaying = true;
 		int frame = 0;
 		while(isPlaying){
-			if(frame >= playback.size() || frame >= this.originZeroCross.size()){
-				stopRecord();
+			if(frame >= playback.size()){
+				isPlaying = false;
 				break;
 			}
 			
 			byte[] buf = audio.recordBuffer();
 			this.record.add(buf.clone());
 			
-			Packet p = new Packet(buf, false, false, frame, this.originZeroCross.get(frame));
+			Packet p = new Packet(buf, false, false, frame, byteArrToInt(this.original.get(frame), 0));
 			byte[] res;
 			if(spi != null) {
 				res = spi.readByte(p.getPacket());
@@ -128,9 +128,7 @@ public class Song {
 				//long key = this.byteArrToInt(res, 2);
 				int cross = this.byteArrToInt(res, 0);
 				this.recordZeroCross.add(cross);
-				float zc = (float)this.originZeroCross.get(frame);
-				float tmpScore = 0;
-				if(zc > 0) tmpScore = (float)cross / zc;
+				float tmpScore = (float)cross / (float)this.originZeroCross.get(frame);
 				if(tmpScore > 1f) tmpScore = 1f - (tmpScore - 1f);
 				if(tmpScore < 0f) tmpScore = 0f;
 				this.score += tmpScore;
@@ -156,7 +154,6 @@ public class Song {
 	
 	public void stopRecord() {
 		this.isPlaying = false;
-		audio.close();
 	}
 
 }
