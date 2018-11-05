@@ -16,7 +16,9 @@ ENTITY autotune IS
 	display5 : OUT STD_LOGIC_VECTOR(6 DOWNTO 0);
 	display6 : OUT STD_LOGIC_VECTOR(6 DOWNTO 0);
 	switch9 : IN STD_LOGIC;													--switches used for sensitivity in measurements of zero crossings
-	switch8 : IN STD_LOGIC);
+	switch8 : IN STD_LOGIC;
+	switch1 : IN STD_LOGIC;
+	switch0 : IN STD_LOGIC);
 END ENTITY autotune;
 
 
@@ -52,7 +54,7 @@ SIGNAL ram_block : mem; 													--https://www.intel.com/content/www/us/en/p
 
 BEGIN
 
-PROCESS(reset, SCLK, switch9, switch8)
+PROCESS(reset, SCLK, switch9, switch8, switch1, switch0)
 	VARIABLE i : INTEGER := 0;												--counter of SPI clock
 	VARIABLE c : INTEGER := 0;												--counter of bytes
 	VARIABLE code : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";							--used for reading data input from MOSI
@@ -71,19 +73,26 @@ PROCESS(reset, SCLK, switch9, switch8)
 	VARIABLE read_address: INTEGER := 0;											--to read from the inferred RAM
 	VARIABLE autotuned : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";						--the samples from the previous packet will be read into this vector before the can be sent back
 	VARIABLE marge_switch : INTEGER range 512 to 4096;									--marge multiplied by a value determined by switch 8 and 9 for variable sensitivity
-	VARIABLE vectorswitch : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(TO_UNSIGNED(marge_switch, 16));		--vector form of marge_switch
+	VARIABLE vectorswitch : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(TO_UNSIGNED(marge_switch/2, 16));		--vector form of marge_switch
 	VARIABLE write_high : STD_LOGIC := '0';											--to distinguish between the two parts of the RAM; if we read to the lower part, data will be written to the upper part and vice versa
 	VARIABLE WE : STD_LOGIC := '0';												--write enable, allows the program to write to the RAM when it is 1
 	VARIABLE RE : STD_LOGIC := '0';												--read enable, allows the program to read from the RAM when it is set to 1
 	VARIABLE Kees : INTEGER := 100;												--used to store the ratio between previous zeros and previous zeros original
+	VARIABLE sensitivity : INTEGER;
+	VARIABLE max_autotune : INTEGER;
+	VARIABLE std_sens : STD_LOGIC_VECTOR(3 DOWNTO 0);
 
 	BEGIN
 		IF switch9 = '0' AND switch8 = '0' THEN marge_switch := marge;							--asynchronous marge select 
 		ELSIF switch9 = '0' AND switch8 = '1' THEN marge_switch := 2*marge;						--encoding for the sensitivity multiplication:
 		ELSIF switch9 = '1' AND switch8 = '0' THEN marge_switch := 4*marge;						--00 => 1 times marge, 01 => 2 times marge 
 		ELSE marge_switch := 8*marge; END IF;										--10 => 4 times marge, 11 => 8 times marge
-		display5 <= hex2display(vectorswitch(11 DOWNTO 8));								--display marge_switch on display 5 and 6
-		display6 <= hex2display(vectorswitch(15 DOWNTO 12));
+		display6 <= hex2display(vectorswitch(11 DOWNTO 8));								--display marge_switch on display 6
+		IF switch1 = '0' AND switch0 = '0' THEN sensitivity := 2; max_autotune := 10; std_sens := "0010";		--asynchronous autotune sensitivity
+		ELSIF switch1 = '0' AND switch0 = '1' THEN sensitivity := 3; max_autotune := 15; std_sens := "0011";		--same way of selecting the sensitivity as for marge
+		ELSIF switch1 = '1' AND switch0 = '0' THEN sensitivity := 4; max_autotune := 20; std_sens := "0100";
+		ELSE sensitivity := 8; max_autotune := 40; std_sens := "1000"; END IF;
+		display5 <= hex2display(std_sens(3 DOWNTO 0));									--display sensitivity on display 5
 
 		IF reset = '0' THEN												--reset values when key0 is pressed
 			i := 0;
@@ -112,15 +121,15 @@ PROCESS(reset, SCLK, switch9, switch8)
 				c := 0; 												--reset c
 				RE := '0';												--make read enable low
 				WE := '0';												--make write enable low
-				IF Kees <= 110 AND Kees >= 90 AND previous_zeros > 0 AND previous_zeros_original > 0 THEN	--set the new value of Kees based on the old values of previos zeros and previous zeros original
-					IF 100*previous_zeros_original/previous_zeros > 102*Kees/100 THEN			--maximum change in Kees upwards
-						Kees := 102*Kees/100;
-					ELSIF 100*previous_zeros_original/previous_zeros < 98*Kees/100 THEN			--and maximum change in Kees down
-						Kees := 98*Kees/100;
+				IF Kees <= 100+max_autotune AND Kees >= 100-max_autotune AND previous_zeros > 0 AND previous_zeros_original > 0 THEN	--set the new value of Kees based on the old values of previos zeros and previous zeros original
+					IF 100*previous_zeros_original/previous_zeros > (100+sensitivity)*Kees/100 THEN		--maximum change in Kees upwards
+						Kees := (100+sensitivity)*Kees/100;
+					ELSIF 100*previous_zeros_original/previous_zeros < (100-sensitivity)*Kees/100 THEN	--and maximum change in Kees down
+						Kees := (100-sensitivity)*Kees/100;
 					ELSE Kees := 100*previous_zeros_original/previous_zeros;				--if Kees changes withing that range, this new value will be assigned to Kees
 					END IF;	
-				ELSIF Kees < 90 THEN Kees := 90;								--absolute minimum of Kees
-				ELSIF Kees > 110 THEN Kees := 110;								--absolute maximum of Kees
+				ELSIF Kees < 100-max_autotune THEN Kees := 100-max_autotune;								--absolute minimum of Kees
+				ELSIF Kees > 100+max_autotune THEN Kees := 100+max_autotune;								--absolute maximum of Kees
 				END IF;
 				previous_zeros_original := zeros_original;							--store the current value of zeros_original in previous_zeros_original which will be used for autotuning
 				stdpzo := STD_LOGIC_VECTOR(TO_UNSIGNED(previous_zeros_original, 16));				--vector form of previous_zeros_original
