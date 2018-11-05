@@ -34,10 +34,12 @@
 				<h3>Settings</h3>
 				<p class="subtitle">&nbsp;</p>
 				<div class="text content">
-					Gamemode: <select><option>Sing-along</option><option>Score me!</option></select><br/>
-					Sampling rate: <select><option>20kHz</option><option>40kHz</option></select><br/>
-					Bit width: <select><option>8bit</option><option>16bit</option></select></br>
-					<br/>
+					<h4>Playback mode:</h4>
+					<button type="button" class="btn btn-primary" onClick="game.setup.noVocal()">Play without vocals</button><br/>
+					<button type="button" class="btn btn-primary" onClick="game.setup.originVocal()">Play with original vocals</button><br/>
+					<button type="button" class="btn btn-primary" onClick="game.setup.yourVocal()">Play with your vocals</button><br/>
+					<button type="button" class="btn btn-primary" onClick="game.setup.autoTune()">Play with autotune</button><br/>
+					<br/><br/>
 					<button type="button" class="btn btn-primary" onClick="ui.main()">Back to main menu</button>
 				</div>
 			</div>
