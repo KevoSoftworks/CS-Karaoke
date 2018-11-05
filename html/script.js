@@ -69,19 +69,19 @@ let game = {
 
 		setTimeout(function(){
 			document.getElementById("status").innerHTML = "Connected";
-			document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 3...</span>";
+			document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 3...</span><img src='justdoit.gif' height='42' width='42'>";
 			game.tick2();
 		}, 1000);
 	},
 	"tick2": function(){
 		setTimeout(function(){
-			document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 2...</span>";
+			document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 2...</span><img src='justdoit.gif' height='42' width='42'>";
 			game.tick3();
 		},1000);
 	},
 	"tick3": function(){
 		setTimeout(function(){
-				document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 1...</span>";
+				document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Starting in 1...</span><img src='justdoit.gif' height='42' width='42'>";
 				game.tick4();
 		},1000);
 	},
