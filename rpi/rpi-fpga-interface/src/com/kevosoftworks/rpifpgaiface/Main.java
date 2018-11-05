@@ -1,21 +1,24 @@
 package com.kevosoftworks.rpifpgaiface;
 
+import com.kevosoftworks.rpifpgaiface.websocket.WSServer;
+
 public class Main implements Runnable{
+	
+	public final static boolean ISPI = true;
 	
 	static boolean running = false;
 	Thread thread;	
-	public static SPIInterface si;
-	ServerStart serverStart;
+	public static SPIInterface si = null;
+	WSServer server;
 	
 	public Main(){
-		si = new SPIInterface();
-		serverStart = new ServerStart();
-		serverStart.start();
+		if(ISPI) si = new SPIInterface();
+		server = new WSServer();
 	}
 
 	@Override
 	public void run() {
-		
+		//WSServer handles this
 	}
 	
 	public static void main(String[] args){

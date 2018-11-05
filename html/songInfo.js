@@ -165,7 +165,9 @@ function startSong(songName) {
         
         // update progress bar.
         myBar.style.width = (timeSeconds / song[song.length - 1][1]) * 100 + '%';
-
+		
+		//Get score
+		new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.SCORE).send(); //Setting the score is handled in websocket.js
         // if the current time is the same as the time when a new song line should be displayed
         if (timeSeconds === song[currentIndex][1]) {
             // update the song line.
@@ -176,7 +178,7 @@ function startSong(songName) {
             if (currentIndex === song.length) {
             	var score = document.getElementById("gameScore").innerHTML;
             	console.log(score);
-            	ws.send("Ending");
+            	new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.SONG_BREAK).send();
                 //go to the endscreen
                 document.getElementById("main").classList.add("slideup");
             	document.getElementById("settings").classList.add("slideup");

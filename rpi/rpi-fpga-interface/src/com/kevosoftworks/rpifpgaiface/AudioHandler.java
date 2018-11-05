@@ -22,7 +22,7 @@ public class AudioHandler {
 		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();		
 		// change the index in the mixinfos[] until it has the correct driver.
 		// Index 2 works for the pi.
-		Mixer mixer = AudioSystem.getMixer(mixInfos[2]);
+		Mixer mixer = AudioSystem.getMixer(mixInfos[Main.ISPI ? 2 : 0]);
 		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
 		
 		try {
@@ -78,5 +78,10 @@ public class AudioHandler {
 		}
 		
 		return ret;
+	}
+	
+	public void close(){
+		microphone.close();
+		speakers.close();
 	}
 }

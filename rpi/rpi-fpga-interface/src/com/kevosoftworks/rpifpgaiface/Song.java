@@ -10,7 +10,7 @@ public class Song {
 	public static final String DEFAULT = "i-want-it-that-way.wav";
 	
 	String name;
-	SPIInterface spi;
+	SPIInterface spi = null;
 	AudioHandler audio;
 	boolean isPlaying = false;
 	boolean ready = false;
@@ -80,17 +80,23 @@ public class Song {
 	}
 	
 	private void sendOriginal(){
-		boolean firstByte = false;
-		for(int i = 0; i < original.size(); i++){
-			Packet p = new Packet(original.get(i).clone(), false, false, i, 0);
-			byte[] result = spi.readByte(p.getPacket());
-			
-			if(firstByte){
-				//long key = this.byteArrToInt(result, 2);
-				int cross = this.byteArrToInt(result, 0);
-				this.originZeroCross.add(cross);
+		if(spi != null) {
+			boolean firstByte = false;
+			for(int i = 0; i < original.size(); i++){
+				Packet p = new Packet(original.get(i).clone(), false, false, i, 0);
+				byte[] result = spi.readByte(p.getPacket());
+				
+				if(firstByte){
+					//long key = this.byteArrToInt(result, 2);
+					int cross = this.byteArrToInt(result, 0);
+					this.originZeroCross.add(cross);
+				}
+				firstByte = true;
 			}
-			firstByte = true;
+		} else {
+			for(int i = 0; i < original.size(); i++) {
+				this.originZeroCross.add(1);
+			}
 		}
 	}
 	
@@ -99,25 +105,32 @@ public class Song {
 		isPlaying = true;
 		int frame = 0;
 		while(isPlaying){
-			if(frame >= playback.size()){
-				isPlaying = false;
-				continue;
+			if(frame >= playback.size() || frame >= this.originZeroCross.size()){
+				stopRecord();
+				break;
 			}
 			
 			byte[] buf = audio.recordBuffer();
 			this.record.add(buf.clone());
 			
-			Packet p = new Packet(buf, false, false, frame, byteArrToInt(this.original.get(frame), 0));
-			byte[] res = spi.readByte(p.getPacket());
+			Packet p = new Packet(buf, false, false, frame, this.originZeroCross.get(frame));
+			byte[] res;
+			if(spi != null) {
+				res = spi.readByte(p.getPacket());
+			} else {
+				res = new byte[p.getPacket().length];
+			}
 			if(frame > 0) this.fpgaModified.add(frame - 1, Arrays.copyOfRange(res, 6, res.length));
 			if(frame > 0) audio.playBuffer(audio.mixBuffers(playback.get(frame - 1), fpgaModified.get(frame - 1)));
 			
 			
-			if(frame > 0){
+			if(frame > 0 && frame < this.originZeroCross.size()){
 				//long key = this.byteArrToInt(res, 2);
 				int cross = this.byteArrToInt(res, 0);
 				this.recordZeroCross.add(cross);
-				float tmpScore = (float)cross / (float)this.originZeroCross.get(frame);
+				float zc = (float)this.originZeroCross.get(frame);
+				float tmpScore = 0;
+				if(zc > 0) tmpScore = (float)cross / zc;
 				if(tmpScore > 1f) tmpScore = 1f - (tmpScore - 1f);
 				if(tmpScore < 0f) tmpScore = 0f;
 				this.score += tmpScore;
@@ -133,16 +146,17 @@ public class Song {
 		return (((in[offset] & 0xFF) << 8) | ((in[offset + 1] & 0xFF)));
 	}
 	
-	private int byteArrToIntRevEndian(byte[] in, int offset){
-		return (((in[offset] & 0xFF)) | ((in[offset + 1] & 0xFF) << 8));
-	}
-	
 	public int getCurrentScore(){
 		return (int)this.score;
 	}
 	
 	public boolean isReady(){
 		return this.ready;
+	}
+	
+	public void stopRecord() {
+		this.isPlaying = false;
+		audio.close();
 	}
 
 }
