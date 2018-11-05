@@ -15,4 +15,5 @@
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Array"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="com.kevosoftworks.rpifpgaiface.SongType"/>
 </qualifiedTypeNameHistroy>
