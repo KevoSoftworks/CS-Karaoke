@@ -9,7 +9,10 @@ public class Song {
 	
 	public static final String DEFAULT = "i-want-it-that-way.wav";
 	
+	final int BUFSIZE = 1024;
+	
 	String name;
+	SongType st = SongType.NOVOCAL;
 	SPIInterface spi = null;
 	AudioHandler audio;
 	boolean isPlaying = false;
@@ -24,12 +27,13 @@ public class Song {
 	ArrayList<byte[]> playback;
 	
 	public Song(SPIInterface spi){
-		this(spi, DEFAULT);
+		this(spi, DEFAULT, SongType.NOVOCAL);
 	}
 	
-	public Song(SPIInterface spi, String name){
+	public Song(SPIInterface spi, String name, SongType st){
 		this.spi = spi;
 		this.name = name;
+		this.st = st;
 		this.original = new ArrayList<byte[]>();
 		this.originZeroCross = new ArrayList<Integer>();
 		this.record = new ArrayList<byte[]>();
@@ -37,7 +41,7 @@ public class Song {
 		this.recordZeroCross = new ArrayList<Integer>();
 		this.playback = new ArrayList<byte[]>();
 		
-		this.audio = new AudioHandler(44100, 16, 1, 4000);
+		this.audio = new AudioHandler(44100, 16, 1, BUFSIZE);
 		
 		try {
 			this.loadSong();
@@ -55,7 +59,7 @@ public class Song {
 	}
 	
 	private void convertPlayback() throws IOException{
-		byte[] wave = new byte[4000];
+		byte[] wave = new byte[BUFSIZE];
 		BufferedInputStream in = new BufferedInputStream(Song.class.getResourceAsStream("/playback/" + this.name));
 
 		int bytesRead = 1;
@@ -68,7 +72,7 @@ public class Song {
 	}
 	
 	private void convertOriginal() throws IOException{
-		byte[] wave = new byte[4000];
+		byte[] wave = new byte[BUFSIZE];
 		BufferedInputStream in = new BufferedInputStream(Song.class.getResourceAsStream("/vocals/" + this.name));
 
 		int bytesRead = 1;
@@ -119,13 +123,25 @@ public class Song {
 				res = spi.readByte(p.getPacket());
 			} else {
 				res = new byte[p.getPacket().length];
-			}
-			if(frame > 0) this.fpgaModified.add(frame - 1, Arrays.copyOfRange(res, 6, res.length));
-			if(frame > 0) audio.playBuffer(audio.mixBuffers(playback.get(frame - 1), fpgaModified.get(frame - 1)));
-			
+			}			
 			
 			if(frame > 0 && frame < this.originZeroCross.size()){
-				//long key = this.byteArrToInt(res, 2);
+				this.fpgaModified.add(frame - 1, Arrays.copyOfRange(res, 6, res.length));
+				switch(this.st){
+					case NOVOCAL:
+						audio.playBuffer(playback.get(frame));
+						break;
+					case ORIGINVOCAL:
+						audio.playBuffer(audio.mixBuffers(playback.get(frame), original.get(frame)));
+						break;
+					case YOURVOCAL:
+						audio.playBuffer(audio.mixBuffers(playback.get(frame), record.get(frame)));
+						break;
+					case AUTOTUNE:
+						audio.playBuffer(audio.mixBuffers(playback.get(frame - 1), fpgaModified.get(frame - 1)));
+						break;
+				}
+				
 				int cross = this.byteArrToInt(res, 0);
 				this.recordZeroCross.add(cross);
 				float zc = (float)this.originZeroCross.get(frame);
@@ -136,7 +152,7 @@ public class Song {
 				this.score += tmpScore;
 			}
 			
-			if(frame > 1) System.out.println("Song: " + originZeroCross.get(frame-1) + "; You: " + recordZeroCross.get(frame-1));
+			if(frame > 1 && frame%25 == 0) System.out.println("Song: " + originZeroCross.get(frame-1) + "; You: " + recordZeroCross.get(frame-1));
 			
 			frame++;
 		}

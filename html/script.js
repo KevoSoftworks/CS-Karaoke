@@ -59,6 +59,20 @@ let ui = {
 }
 
 let game = {
+	"setup": {
+		"noVocal": function(){
+			new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.MODE_NOVOCAL).send();
+		},
+		"originVocal": function(){
+			new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.MODE_ORIGINVOCAL).send();
+		},
+		"yourVocal": function(){
+			new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.MODE_YOURVOCAL).send();
+		},
+		"autoTune": function(){
+			new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.MODE_AUTOTUNE).send();
+		}
+	},
 	"init": function(){
 		game.score = 0;
 		// set active song

@@ -35,7 +35,11 @@ var PacketMsgType = {
 	SONG_START: 0x12,
 	SONG_END: 0x13,
 	SONG_BREAK: 0x14,
-	SCORE: 0x20
+	SCORE: 0x20,
+	MODE_NOVOCAL: 0x30,
+	MODE_ORIGINVOCAL: 0x31,
+	MODE_YOURVOCAL: 0x32,
+	MODE_AUTOTUNE: 0x33
 };
 
 var PacketDataType = {

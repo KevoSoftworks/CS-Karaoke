@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import com.kevosoftworks.rpifpgaiface.Main;
 import com.kevosoftworks.rpifpgaiface.Song;
+import com.kevosoftworks.rpifpgaiface.SongType;
 import com.kevosoftworks.rpifpgaiface.websocket.packet.WSPacket;
 import com.kevosoftworks.rpifpgaiface.websocket.packet.WSPacketDataType;
 import com.kevosoftworks.rpifpgaiface.websocket.packet.WSPacketType;
@@ -25,6 +26,7 @@ public class WSHandler {
 	private Session wsSession;
 	
 	Song s;
+	SongType st = SongType.NOVOCAL;
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
@@ -65,7 +67,7 @@ public class WSHandler {
     		switch(pin.getMsgType()) {
     			case SONG_LOAD:
     				this.activeSong = songtofile.get(pin.getData());
-    				this.s = new Song(Main.si, activeSong);
+    				this.s = new Song(Main.si, activeSong, st);
     				while(!s.isReady()) {} //Do Nothing
     				this.wsSession.getRemote().sendString(
     						new WSPacket(
@@ -94,6 +96,18 @@ public class WSHandler {
     								Integer.toString(s.getCurrentScore())
     							).getFinalisedPacket()
     					);
+    				break;
+    			case MODE_NOVOCAL:
+    				st = SongType.NOVOCAL;
+    				break;
+    			case MODE_ORIGINVOCAL:
+    				st = SongType.ORIGINVOCAL;
+    				break;
+    			case MODE_YOURVOCAL:
+    				st = SongType.YOURVOCAL;
+    				break;
+    			case MODE_AUTOTUNE:
+    				st = SongType.AUTOTUNE;
     				break;
     			default:
     				//Do something
