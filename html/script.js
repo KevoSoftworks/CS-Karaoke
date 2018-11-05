@@ -21,6 +21,7 @@ let ui = {
 		/*
 			TODO: Show a loading page
 		*/
+		document.getElementById("gameWindow").innerHTML = "<span id='gameScore' style='font-size: 32px'>Loading...</span><img src='justdoit.gif' height='42' width='42'>";
 	},
 
 	"main": function(){
@@ -86,12 +87,13 @@ let game = {
 		},1000);
 	},
 	"tick4": function(){
-	  
-		new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.SONG_START).send();
-		startSong(activeSong);
-		
-		document.getElementById("gameWindow").innerHTML = `<span id='gameScore' style='font-size: 24px'>Score: 0</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
-		document.getElementById("barInner").setAttribute("style", `width: 0%`);
+	  	setTimeout(function(){
+			new Packet(PacketType.CLIENT_MESSAGE, PacketMsgType.SONG_START).send();
+			startSong(activeSong);
+			
+			document.getElementById("gameWindow").innerHTML = `<span id='gameScore' style='font-size: 24px'>Score: 0</span><br/><div class='barOuter'><div id="barInner" class='barInner'>&nbsp;</div></div>`;
+			document.getElementById("barInner").setAttribute("style", `width: 0%`);
+		},1000);
 	}
 }
 
